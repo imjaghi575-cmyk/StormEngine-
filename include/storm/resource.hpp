@@ -2,10 +2,11 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
-#include <filesystem>
 
 namespace storm {
 
@@ -51,12 +52,7 @@ public:
         const std::string& path) const override;
 
 private:
-    struct Entry {
-        std::string path;
-        std::shared_ptr<const Resource> resource;
-    };
-
-    std::vector<Entry> resources_;
+    std::unordered_map<std::string, std::shared_ptr<const Resource>> resources_;
 };
 
 } // namespace storm
