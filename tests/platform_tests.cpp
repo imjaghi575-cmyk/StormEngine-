@@ -44,6 +44,10 @@ int main() {
     input.set_key(storm::Key::Unknown, true);
     assert(input.key_down(storm::Key::Unknown));
 
+    const auto invalid_key = static_cast<storm::Key>(999);
+    input.set_key(invalid_key, true);
+    assert(!input.key_down(invalid_key));
+
     assert(platform->poll_events(input));
     platform->shutdown();
 
