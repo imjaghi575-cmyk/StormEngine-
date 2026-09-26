@@ -129,6 +129,9 @@ jobs:
           set -euo pipefail
           test -f stage/lib/cmake/StormEngine/StormEngineConfig.cmake
           test -f stage/lib/cmake/StormEngine/StormEngineTargets.cmake
+          cmake -S tests/package_consumer -B build-consumer -G Ninja \
+            -DCMAKE_PREFIX_PATH="$PWD/stage"
+          cmake --build build-consumer --parallel
 
   sanitizer:
     name: GCC / Address + Undefined Sanitizers
