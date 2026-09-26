@@ -5,7 +5,11 @@
 int main() {
     auto platform = storm::create_headless_platform();
 
+    assert(!platform->poll_events(*new storm::InputState{}));
     assert(!platform->initialize(0, 720, "invalid"));
+    assert(platform->width() == 0);
+    assert(platform->height() == 0);
+
     assert(platform->initialize(1280, 720, "Storm Test"));
     assert(platform->width() == 1280);
     assert(platform->height() == 720);
@@ -18,6 +22,10 @@ int main() {
 
     assert(platform->poll_events(input));
     platform->shutdown();
+
+    assert(platform->width() == 0);
+    assert(platform->height() == 0);
+    assert(!platform->poll_events(input));
 
     return 0;
 }
