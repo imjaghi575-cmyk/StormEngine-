@@ -86,7 +86,8 @@ public:
         double max_delta_seconds{0.1};
     };
 
-    explicit Engine(Config config = {});
+    Engine();
+    explicit Engine(Config config);
 
     void set_scene(std::unique_ptr<Scene> scene);
     Scene* scene() noexcept;
