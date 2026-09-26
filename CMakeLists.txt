@@ -6,12 +6,14 @@ project(StormEngine
     LANGUAGES CXX
 )
 
+include(CTest)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(STORM_BUILD_DEMO "Build the Storm Engine demos" ON)
-option(STORM_BUILD_TESTS "Build Storm Engine tests" ON)
+option(STORM_BUILD_TESTS "Build Storm Engine tests" ${BUILD_TESTING})
 
 add_library(storm_core
     src/storm/core.cpp
@@ -34,9 +36,7 @@ if(STORM_BUILD_DEMO)
     target_link_libraries(storm_renderer_demo PRIVATE storm_core)
 endif()
 
-if(STORM_BUILD_TESTS)
-    enable_testing()
-
+if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_core_tests tests/core_tests.cpp)
     target_link_libraries(storm_core_tests PRIVATE storm_core)
     add_test(NAME storm_core_tests COMMAND storm_core_tests)
