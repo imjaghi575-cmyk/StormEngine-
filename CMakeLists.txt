@@ -32,17 +32,34 @@ add_library(storm_core
 
 target_include_directories(storm_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-
 target_compile_features(storm_core PUBLIC cxx_std_17)
 
 if(STORM_BUILD_INSTALL)
+    include(CMakePackageConfigHelpers)
+
     install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS storm_core EXPORT StormEngineTargets
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/StormEngineConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/StormEngineConfig.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/StormEngine
+    )
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/StormEngineConfigVersion.cmake
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
     install(EXPORT StormEngineTargets
         NAMESPACE StormEngine::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/StormEngine)
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/StormEngineConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/StormEngineConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/StormEngine)
 endif()
 
