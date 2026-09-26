@@ -12,6 +12,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+include(GNUInstallDirs)
+
+option(STORM_BUILD_INSTALL "Enable installation rules for Storm Engine" OFF)
+
 option(STORM_BUILD_DEMO "Build the Storm Engine demos" ON)
 option(STORM_BUILD_TESTS "Build Storm Engine tests" ${BUILD_TESTING})
 option(STORM_ENABLE_WARNINGS "Enable compiler warnings for Storm targets" ON)
@@ -35,6 +39,17 @@ if(STORM_ENABLE_WARNINGS)
     else()
         target_compile_options(storm_core PRIVATE -Wall -Wextra -Wpedantic)
     endif()
+endif()
+
+if(STORM_BUILD_INSTALL)
+    install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(TARGETS storm_core EXPORT StormEngineTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(EXPORT StormEngineTargets
+        NAMESPACE StormEngine::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/StormEngine)
 endif()
 
 if(STORM_BUILD_DEMO)
