@@ -34,11 +34,13 @@ struct InputState {
     bool quit_requested{false};
 
     bool key_down(Key key) const noexcept {
+        if (key == Key::Unknown || key == Key::Count) return false;
         const auto index = static_cast<std::size_t>(key);
         return index < keys.size() && keys[index];
     }
 
     void set_key(Key key, bool down) noexcept {
+        if (key == Key::Unknown || key == Key::Count) return;
         const auto index = static_cast<std::size_t>(key);
         if (index < keys.size()) keys[index] = down;
     }
