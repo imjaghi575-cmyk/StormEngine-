@@ -10,10 +10,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(STORM_BUILD_DEMO "Build the Storm Engine command-line demo" ON)
+option(STORM_BUILD_DEMO "Build the Storm Engine demos" ON)
 
 add_library(storm_core
     src/storm/core.cpp
+    src/storm/software_renderer.cpp
 )
 
 target_include_directories(storm_core
@@ -28,4 +29,9 @@ if(STORM_BUILD_DEMO)
         examples/hello_world.cpp
     )
     target_link_libraries(storm_demo PRIVATE storm_core)
+
+    add_executable(storm_renderer_demo
+        examples/renderer_demo.cpp
+    )
+    target_link_libraries(storm_renderer_demo PRIVATE storm_core)
 endif()
