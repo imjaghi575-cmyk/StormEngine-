@@ -6,6 +6,18 @@
 #include <limits>
 #include <memory>
 
+class TestNode final : public storm::Node {
+public:
+    TestNode() : storm::Node("Test") {}
+
+    void update(double delta_seconds) override {
+        auto p = position();
+        p.x += static_cast<float>(delta_seconds);
+        set_position(p);
+        storm::Node::update(delta_seconds);
+    }
+};
+
 class SpawningNode final : public storm::Node {
 public:
     SpawningNode()
@@ -28,18 +40,6 @@ public:
 private:
     bool spawned_{false};
     storm::Node* spawned_child_{nullptr};
-};
-
-class TestNode final : public storm::Node {
-public:
-    TestNode() : storm::Node("Test") {}
-
-    void update(double delta_seconds) override {
-        auto p = position();
-        p.x += static_cast<float>(delta_seconds);
-        set_position(p);
-        storm::Node::update(delta_seconds);
-    }
 };
 
 int main() {
