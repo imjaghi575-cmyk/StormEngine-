@@ -27,7 +27,7 @@ int main() {
     assert(clock.max_delta_seconds() == 0.0);
 
     clock.reset();
-    assert(clock.tick(0.05) == 0.0 || std::abs(clock.tick(0.05) - 0.05) < 1e-12);
+    assert(clock.tick(0.05) == 0.0);
 
     return 0;
 }
