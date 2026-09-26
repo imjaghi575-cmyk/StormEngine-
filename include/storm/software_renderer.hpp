@@ -13,7 +13,7 @@ public:
     void begin_frame(Color clear_color) override;
     void draw_rect(const Rect& rect, Color color) override;
     void draw_sprite(const Rect& destination,
-                     const std::string& texture) override;
+                     const Texture2D& texture) override;
     void end_frame() override;
     void shutdown() override;
 
