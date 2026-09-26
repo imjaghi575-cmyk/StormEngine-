@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace storm {
 
 class FixedTimestep {
@@ -29,7 +31,7 @@ public:
         }
 
         if (steps == max_steps_per_tick_ && accumulator_ >= step_seconds_) {
-            accumulator_ = 0.0;
+            accumulator_ = std::fmod(accumulator_, step_seconds_);
         }
 
         return steps;
