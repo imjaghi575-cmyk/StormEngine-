@@ -42,7 +42,10 @@ int main() {
     assert(input.quit_requested);
 
     input.set_key(storm::Key::Unknown, true);
-    assert(input.key_down(storm::Key::Unknown));
+    assert(!input.key_down(storm::Key::Unknown));
+
+    input.set_key(storm::Key::Count, true);
+    assert(!input.key_down(storm::Key::Count));
 
     const auto invalid_key = static_cast<storm::Key>(999);
     input.set_key(invalid_key, true);
