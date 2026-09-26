@@ -23,6 +23,7 @@ add_library(storm_core
     src/storm/input.cpp
     src/storm/software_renderer.cpp
     src/storm/headless_platform.cpp
+    src/storm/resource.cpp
 )
 
 target_include_directories(storm_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -63,6 +64,9 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_fixed_timestep_tests tests/fixed_timestep_tests.cpp)
     target_link_libraries(storm_fixed_timestep_tests PRIVATE storm_core)
 
+    add_executable(storm_resource_tests tests/resource_tests.cpp)
+    target_link_libraries(storm_resource_tests PRIVATE storm_core)
+
     set(STORM_TEST_TARGETS
         storm_core_tests
         storm_platform_tests
@@ -70,6 +74,7 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
         storm_time_tests
         storm_input_tests
         storm_fixed_timestep_tests
+        storm_resource_tests
     )
 
     if(MSVC)
@@ -88,4 +93,5 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_test(NAME storm_time_tests COMMAND storm_time_tests)
     add_test(NAME storm_input_tests COMMAND storm_input_tests)
     add_test(NAME storm_fixed_timestep_tests COMMAND storm_fixed_timestep_tests)
+    add_test(NAME storm_resource_tests COMMAND storm_resource_tests)
 endif()
