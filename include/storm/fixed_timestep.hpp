@@ -22,6 +22,11 @@ public:
         }
 
         accumulator_ += elapsed_seconds;
+        if (!std::isfinite(accumulator_)) {
+            accumulator_ = 0.0;
+            return 0;
+        }
+
         int steps = 0;
         while (accumulator_ >= step_seconds_ &&
                steps < max_steps_per_tick_) {
