@@ -23,9 +23,13 @@ int main() {
     queue.push({storm::InputEventType::KeyReleased, storm::KeyCode::Left});
 
     assert(queue.size() == 2);
-    assert(queue.pop().type == storm::InputEventType::KeyPressed);
-    assert(queue.pop().type == storm::InputEventType::KeyReleased);
+    storm::InputEvent event;
+    assert(queue.try_pop(event));
+    assert(event.type == storm::InputEventType::KeyPressed);
+    assert(queue.try_pop(event));
+    assert(event.type == storm::InputEventType::KeyReleased);
     assert(queue.empty());
+    assert(!queue.try_pop(event));
 
     queue.push({storm::InputEventType::KeyPressed, storm::KeyCode::Enter});
     queue.clear();
