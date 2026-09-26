@@ -1,5 +1,6 @@
 #pragma once
 
+#include "storm/input.hpp"
 #include "storm/time.hpp"
 
 #include <cmath>
@@ -95,6 +96,9 @@ public:
     Scene* scene() noexcept;
 
     void tick(double delta_seconds);
+    void process_input();
+    InputState& input() noexcept;
+    const InputState& input() const noexcept;
     void run_for(double seconds, double fixed_step = 1.0 / 60.0);
 
     const Config& config() const noexcept;
@@ -102,6 +106,8 @@ public:
 private:
     Config config_;
     FrameClock clock_;
+    InputQueue input_queue_;
+    InputState input_state_;
     std::unique_ptr<Scene> scene_;
 };
 
