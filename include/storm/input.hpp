@@ -43,27 +43,51 @@ enum class KeyCode : std::uint16_t {
     Z
 };
 
+enum class PointerButton : std::uint8_t {
+    None = 0,
+    Primary,
+    Secondary,
+    Middle
+};
+
 enum class InputEventType : std::uint8_t {
     KeyPressed,
-    KeyReleased
+    KeyReleased,
+    PointerMoved,
+    PointerPressed,
+    PointerReleased
 };
 
 struct InputEvent {
     InputEventType type{InputEventType::KeyReleased};
     KeyCode key{KeyCode::Unknown};
+    PointerButton button{PointerButton::None};
+    float x{0.0f};
+    float y{0.0f};
 };
 
 class InputState {
 public:
     void apply(const InputEvent& event) noexcept;
+
     bool is_down(KeyCode key) const noexcept;
+    bool is_down(PointerButton button) const noexcept;
+
+    float pointer_x() const noexcept;
+    float pointer_y() const noexcept;
+
     void clear() noexcept;
 
 private:
     static constexpr std::size_t key_count =
         static_cast<std::size_t>(KeyCode::Z) + 1U;
+    static constexpr std::size_t pointer_button_count =
+        static_cast<std::size_t>(PointerButton::Middle) + 1U;
 
     bool keys_[key_count]{};
+    bool pointer_buttons_[pointer_button_count]{};
+    float pointer_x_{0.0f};
+    float pointer_y_{0.0f};
 };
 
 class InputQueue {
