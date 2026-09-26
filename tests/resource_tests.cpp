@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <cstdint>
+#include <filesystem>
+#include <fstream>
 #include <vector>
 #include <filesystem>
 #include <fstream>
@@ -58,6 +60,35 @@ int main() {
     assert(files.load("missing.bin") == nullptr);
 
     std::filesystem::remove_all(root);
+
+
+    const auto root = std::filesystem::temp_directory_path() /
+                      "storm_engine_resource_tests";
+    std::error_code ec;
+    std::filesystem::remove_all(root, ec);
+    std::filesystem::create_directories(root / "assets", ec);
+    assert(!ec);
+
+    {
+        std::ofstream file(root / "assets" / "data.bin",
+                           std::ios::binary);
+        file.write("\x01\x02\x03", 3);
+    }
+
+    storm::FileResourceProvider files(root);
+    auto disk = files.load("assets/data.bin");
+    assert(disk != nullptr);
+    assert(disk->size() == 3);
+    assert(disk->data()[0] == 1);
+    assert(disk->data()[2] == 3);
+
+    assert(files.load("") == nullptr);
+    assert(files.load("../data.bin") == nullptr);
+    assert(files.load(root.string()) == nullptr);
+    assert(files.load("missing.bin") == nullptr);
+
+    std::filesystem::remove_all(root, ec);
+    assert(!ec);
 
     return 0;
 }
