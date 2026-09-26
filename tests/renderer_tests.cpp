@@ -54,6 +54,7 @@ int main() {
     assert(software->framebuffer()[20U * 640U + 20U].r == 255);
     assert(software->framebuffer()[20U * 640U + 28U].g == 255);
     assert(software->framebuffer()[28U * 640U + 20U].b == 255);
+    assert(software->framebuffer()[20U * 640U + 28U].a == 255);
     assert(software->framebuffer()[10U * 640U + 10U].r == 255);
     assert(software->framebuffer()[0].r == 10);
     assert(software->framebuffer()[0].g == 20);
