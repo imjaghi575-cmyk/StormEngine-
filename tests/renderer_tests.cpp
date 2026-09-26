@@ -34,6 +34,12 @@ int main() {
     renderer->draw_rect({
         std::numeric_limits<float>::quiet_NaN(), 10, 32, 32
     }, {255, 255, 255, 255});
+    renderer->draw_rect({
+        std::numeric_limits<float>::max(), 10, 32, 32
+    }, {255, 255, 255, 255});
+    renderer->draw_rect({
+        -std::numeric_limits<float>::max(), 10, 32, 32
+    }, {255, 255, 255, 255});
     renderer->draw_sprite({20, 20, 16, 16}, "test.png");
     assert(software->framebuffer()[10U * 640U + 10U].r == 255);
     assert(software->framebuffer().front().r == 10);
