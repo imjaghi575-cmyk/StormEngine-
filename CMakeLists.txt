@@ -19,6 +19,7 @@ option(STORM_ENABLE_WARNINGS "Enable compiler warnings for Storm targets" ON)
 add_library(storm_core
     src/storm/core.cpp
     src/storm/time.cpp
+    src/storm/fixed_timestep.cpp
     src/storm/input.cpp
     src/storm/software_renderer.cpp
     src/storm/headless_platform.cpp
@@ -59,12 +60,16 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_input_tests tests/input_tests.cpp)
     target_link_libraries(storm_input_tests PRIVATE storm_core)
 
+    add_executable(storm_fixed_timestep_tests tests/fixed_timestep_tests.cpp)
+    target_link_libraries(storm_fixed_timestep_tests PRIVATE storm_core)
+
     set(STORM_TEST_TARGETS
         storm_core_tests
         storm_platform_tests
         storm_renderer_tests
         storm_time_tests
         storm_input_tests
+        storm_fixed_timestep_tests
     )
 
     if(MSVC)
@@ -82,4 +87,5 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_test(NAME storm_renderer_tests COMMAND storm_renderer_tests)
     add_test(NAME storm_time_tests COMMAND storm_time_tests)
     add_test(NAME storm_input_tests COMMAND storm_input_tests)
+    add_test(NAME storm_fixed_timestep_tests COMMAND storm_fixed_timestep_tests)
 endif()
