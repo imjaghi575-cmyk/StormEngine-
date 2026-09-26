@@ -51,6 +51,9 @@ void Scene::update(double delta_seconds) {
     root_.update(delta_seconds);
 }
 
+Engine::Engine()
+    : config_{} {}
+
 Engine::Engine(Config config)
     : config_(std::move(config)) {}
 
