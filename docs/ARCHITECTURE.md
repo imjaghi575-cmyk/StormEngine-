@@ -36,7 +36,7 @@ Unknown keyboard and pointer sentinel values are deliberately not reported as pr
 
 `Renderer2D` is the renderer interface. The current software renderer is a deterministic test backend rather than a windowing system.
 
-Its framebuffer is stored as a contiguous `Color` array. `begin_frame` clears it, and `draw_rect` performs finite-rectangle validation and viewport clipping. Texture loading is not implemented yet; `draw_sprite` remains a no-op until the resource system exists.
+Its framebuffer is stored as a contiguous `Color` array. `begin_frame` clears it, `draw_rect` performs finite-rectangle validation and viewport clipping, and `draw_sprite` performs deterministic nearest-neighbour sampling from an immutable `Texture2D` value with viewport clipping. Texture decoding/loading is intentionally separate from the renderer.
 
 ### Resources
 
@@ -52,6 +52,7 @@ The repository uses CMake presets and CTest. CI verifies:
 4. Clang Release
 5. GCC AddressSanitizer + UndefinedBehaviorSanitizer
 6. Android NDK arm64-v8a
+7. GCC CMake install/package consumer
 
 The Android build uses the NDK CMake toolchain and does not build desktop demos or tests. Optional CMake installation exports `StormEngine::storm_core` through a relocatable package configuration.
 
