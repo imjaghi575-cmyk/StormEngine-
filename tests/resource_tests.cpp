@@ -4,9 +4,6 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
-#include <vector>
-#include <filesystem>
-#include <fstream>
 
 int main() {
     storm::Resource empty;
@@ -42,40 +39,21 @@ int main() {
     assert(provider.load("a") == nullptr);
     assert(provider.load("b") == nullptr);
 
-    const auto root = std::filesystem::temp_directory_path() / "storm-resource-test";
-    std::filesystem::create_directories(root / "nested");
-    {
-        std::ofstream file(root / "nested" / "data.bin", std::ios::binary);
-        file << "abc";
-    }
-
-    const storm::FileResourceProvider files(root);
-    auto loaded = files.load("nested/data.bin");
-    assert(loaded != nullptr);
-    assert(loaded->size() == 3);
-    assert(loaded->data()[0] == static_cast<std::uint8_t>('a'));
-    assert(files.load("") == nullptr);
-    assert(files.load("../data.bin") == nullptr);
-    assert(files.load(root.string()) == nullptr);
-    assert(files.load("missing.bin") == nullptr);
-
-    std::filesystem::remove_all(root);
-
-
     const auto root = std::filesystem::temp_directory_path() /
                       "storm_engine_resource_tests";
     std::error_code ec;
     std::filesystem::remove_all(root, ec);
+    assert(!ec);
     std::filesystem::create_directories(root / "assets", ec);
     assert(!ec);
 
     {
-        std::ofstream file(root / "assets" / "data.bin",
-                           std::ios::binary);
+        std::ofstream file(root / "assets" / "data.bin", std::ios::binary);
         file.write("\x01\x02\x03", 3);
+        assert(file.good());
     }
 
-    storm::FileResourceProvider files(root);
+    const storm::FileResourceProvider files(root);
     auto disk = files.load("assets/data.bin");
     assert(disk != nullptr);
     assert(disk->size() == 3);
@@ -86,6 +64,14 @@ int main() {
     assert(files.load("../data.bin") == nullptr);
     assert(files.load(root.string()) == nullptr);
     assert(files.load("missing.bin") == nullptr);
+
+    std::filesystem::create_directories(root / "outside", ec);
+    assert(!ec);
+    std::filesystem::create_directory_symlink(
+        root / "assets", root / "outside" / "link", ec);
+    if (!ec) {
+        assert(files.load("outside/link/data.bin") != nullptr);
+    }
 
     std::filesystem::remove_all(root, ec);
     assert(!ec);
