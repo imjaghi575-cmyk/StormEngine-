@@ -173,4 +173,4 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cmake --build build/android-arm64 --parallel
+          cmake --build --preset android-arm64 --parallel
