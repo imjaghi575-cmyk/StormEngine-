@@ -52,8 +52,8 @@ int main() {
     assert(!huge_texture.valid());
     renderer->draw_sprite({20, 20, 16, 16}, texture);
     assert(software->framebuffer()[20U * 640U + 20U].r == 255);
-    assert(software->framebuffer()[20U * 640U + 27U].g == 255);
-    assert(software->framebuffer()[27U * 640U + 20U].b == 255);
+    assert(software->framebuffer()[20U * 640U + 28U].g == 255);
+    assert(software->framebuffer()[28U * 640U + 20U].b == 255);
     assert(software->framebuffer()[10U * 640U + 10U].r == 255);
     assert(software->framebuffer().front().r == 10);
     assert(software->framebuffer().front().g == 20);
