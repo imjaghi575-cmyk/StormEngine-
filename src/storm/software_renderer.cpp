@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <utility>
 
 namespace storm {
@@ -20,7 +21,8 @@ bool Texture2D::valid() const noexcept {
     if (width_ <= 0 || height_ <= 0) return false;
     const auto w = static_cast<std::size_t>(width_);
     const auto h = static_cast<std::size_t>(height_);
-    return pixels_.size() == w * h;
+    return h <= std::numeric_limits<std::size_t>::max() / w &&
+           pixels_.size() == w * h;
 }
 
 bool SoftwareRenderer::initialize(int width, int height,
@@ -30,8 +32,13 @@ bool SoftwareRenderer::initialize(int width, int height,
         return false;
     }
 
-    const auto pixel_count = static_cast<std::size_t>(width) *
-                             static_cast<std::size_t>(height);
+    const auto w = static_cast<std::size_t>(width);
+    const auto h = static_cast<std::size_t>(height);
+    if (h > std::numeric_limits<std::size_t>::max() / w) {
+        shutdown();
+        return false;
+    }
+    const auto pixel_count = w * h;
     try {
         pixels_.assign(pixel_count, Color{});
     } catch (...) {
