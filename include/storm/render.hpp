@@ -1,8 +1,7 @@
 #pragma once
 
-#include "storm/core.hpp"
-
 #include <cstdint>
+#include <memory>
 #include <string>
 
 namespace storm {
@@ -32,12 +31,14 @@ public:
     virtual void end_frame() = 0;
     virtual void shutdown() = 0;
 
-    int width() const { return width_; }
-    int height() const { return height_; }
+    int width() const noexcept { return width_; }
+    int height() const noexcept { return height_; }
 
 protected:
     int width_{0};
     int height_{0};
 };
+
+std::unique_ptr<Renderer2D> create_software_renderer();
 
 } // namespace storm
