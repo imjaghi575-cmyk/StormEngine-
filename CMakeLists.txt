@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(StormEngine
     VERSION 0.1.0
-    DESCRIPTION "A small modular game engine for Termux and Android"
+    DESCRIPTION "A small modular game engine for Android and Termux"
     LANGUAGES CXX
 )
 
@@ -44,4 +44,8 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_platform_tests tests/platform_tests.cpp)
     target_link_libraries(storm_platform_tests PRIVATE storm_core)
     add_test(NAME storm_platform_tests COMMAND storm_platform_tests)
+
+    add_executable(storm_renderer_tests tests/renderer_tests.cpp)
+    target_link_libraries(storm_renderer_tests PRIVATE storm_core)
+    add_test(NAME storm_renderer_tests COMMAND storm_renderer_tests)
 endif()
