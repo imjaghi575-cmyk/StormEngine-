@@ -11,10 +11,10 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Node/Scene hierarchy
 - Frame timing and update loop
 - Platform abstraction and headless backend
-- Input state abstraction
+- Input state and queued keyboard/pointer events
 - Renderer2D abstraction
 - Software renderer smoke-test backend
-- Four CTest core/platform/renderer/time test targets
+- Five CTest core/platform/renderer/time/input test targets
 - GCC and Clang Debug/Release CI
 - GCC AddressSanitizer/UndefinedBehaviorSanitizer CI
 - CMake Debug/Release presets using Ninja
