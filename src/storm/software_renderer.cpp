@@ -1,5 +1,6 @@
 #include "storm/software_renderer.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <utility>
