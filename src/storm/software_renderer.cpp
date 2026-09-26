@@ -107,8 +107,8 @@ void SoftwareRenderer::draw_sprite(const Rect& destination,
         return;
     }
 
-    const int left = std::max(0, static_cast<int>(std::floor(x0)));
-    const int top = std::max(0, static_cast<int>(std::floor(y0)));
+    const int left = x0 <= 0.0 ? 0 : static_cast<int>(std::floor(x0));
+    const int top = y0 <= 0.0 ? 0 : static_cast<int>(std::floor(y0));
     const double clipped_x1 = std::min(x1, static_cast<double>(width_));
     const double clipped_y1 = std::min(y1, static_cast<double>(height_));
     const int right = std::min(width_, static_cast<int>(std::ceil(clipped_x1)));
