@@ -2,14 +2,18 @@
 
 int main() {
     auto renderer = storm::create_software_renderer();
+    if (!renderer->initialize(640, 360, "Storm Renderer Demo")) return 1;
 
-    if (!renderer->initialize(800, 450, "Storm Engine Demo")) return 1;
+    renderer->begin_frame({20, 24, 32, 255});
+    renderer->draw_rect({40, 40, 200, 100}, {40, 120, 220, 255});
 
-    renderer->begin_frame({20, 30, 45, 255});
-    renderer->draw_rect({100, 100, 200, 120}, {40, 120, 220, 255});
-    renderer->draw_sprite({350, 150, 128, 128}, "player.png");
+    const storm::Texture2D texture(2, 2, {
+        {255, 80, 80, 255}, {80, 255, 80, 255},
+        {80, 80, 255, 255}, {255, 255, 255, 255}
+    });
+    renderer->draw_sprite({350, 150, 128, 128}, texture);
+
     renderer->end_frame();
     renderer->shutdown();
-
     return 0;
 }
