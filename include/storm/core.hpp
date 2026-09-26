@@ -1,7 +1,7 @@
 #pragma once
 
 #include <chrono>
-#include <cstdint>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <vector>
@@ -15,17 +15,17 @@ struct Vec2 {
     Vec2() = default;
     Vec2(float x_value, float y_value) : x(x_value), y(y_value) {}
 
-    Vec2 operator+(const Vec2& other) const {
-        return {x + other.x, y + other.y};
-    }
+    Vec2 operator+(const Vec2& other) const { return {x + other.x, y + other.y}; }
+    Vec2 operator-(const Vec2& other) const { return {x - other.x, y - other.y}; }
+    Vec2 operator*(float scalar) const { return {x * scalar, y * scalar}; }
 
-    Vec2 operator-(const Vec2& other) const {
-        return {x - other.x, y - other.y};
-    }
+    float length() const { return std::sqrt(x * x + y * y); }
+};
 
-    Vec2 operator*(float scalar) const {
-        return {x * scalar, y * scalar};
-    }
+struct Transform2D {
+    Vec2 position{};
+    Vec2 scale{1.0f, 1.0f};
+    float rotation{0.0f};
 };
 
 class Node {
@@ -36,17 +36,24 @@ public:
     const std::string& name() const;
     void set_name(std::string name);
 
+    const Transform2D& transform() const;
+    Transform2D& transform();
+
     Vec2 position() const;
     void set_position(Vec2 position);
 
+    Node* parent() const;
     void add_child(std::unique_ptr<Node> child);
     const std::vector<std::unique_ptr<Node>>& children() const;
 
     virtual void update(double delta_seconds);
 
+protected:
+    Node* parent_{nullptr};
+
 private:
     std::string name_;
-    Vec2 position_{};
+    Transform2D transform_{};
     std::vector<std::unique_ptr<Node>> children_;
 };
 
