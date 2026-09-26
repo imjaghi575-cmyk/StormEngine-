@@ -66,7 +66,8 @@ int main() {
     const auto fixed_scene_before = engine_child_ptr->position().x;
     fixed_steps = engine.fixed_update(0.21);
     assert(fixed_steps == 8);
-    assert(engine_child_ptr->position().x > fixed_scene_before);
+    assert(std::abs(engine_child_ptr->position().x -
+                    (fixed_scene_before + 8.0f / 60.0f)) < 0.0001f);
 
     engine.tick(-1.0);
     assert(std::abs(engine_child_ptr->position().x - 0.1f) < 0.0001f);
