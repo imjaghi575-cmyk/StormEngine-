@@ -58,6 +58,20 @@ int main() {
     engine.tick(-1.0);
     assert(std::abs(engine_child_ptr->position().x - 0.1f) < 0.0001f);
 
+    storm::Engine invalid_engine({
+        "Invalid Config",
+        -1.0
+    });
+    auto invalid_scene = std::make_unique<storm::Scene>();
+    auto* invalid_root = &invalid_scene->root();
+    auto invalid_child = std::make_unique<TestNode>();
+    auto* invalid_child_ptr = invalid_child.get();
+    invalid_root->add_child(std::move(invalid_child));
+    invalid_engine.set_scene(std::move(invalid_scene));
+
+    invalid_engine.tick(1.0);
+    assert(std::abs(invalid_child_ptr->position().x) < 0.0001f);
+
     engine.set_scene(nullptr);
     assert(engine.scene() == nullptr);
 
