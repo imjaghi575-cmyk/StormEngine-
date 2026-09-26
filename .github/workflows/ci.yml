@@ -83,6 +83,53 @@ jobs:
           fi
           ctest --preset "${preset}"
 
+  install-package:
+    name: GCC / CMake install package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++
+
+      - name: Configure
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S . -B build-package -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DSTORM_BUILD_DEMO=OFF \
+            -DSTORM_BUILD_TESTS=OFF \
+            -DSTORM_BUILD_INSTALL=ON
+
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --build build-package --parallel
+
+      - name: Install
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --install build-package --prefix "$PWD/stage"
+
+      - name: Verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f stage/lib/cmake/StormEngine/StormEngineConfig.cmake
+          test -f stage/lib/cmake/StormEngine/StormEngineTargets.cmake
+
   sanitizer:
     name: GCC / Address + Undefined Sanitizers
     runs-on: ubuntu-latest
