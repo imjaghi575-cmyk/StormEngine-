@@ -1,6 +1,7 @@
 #include "storm/core.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <thread>
 #include <utility>
 
@@ -21,7 +22,7 @@ Vec2 Node::position() const { return transform_.position; }
 
 void Node::set_position(Vec2 position) { transform_.position = position; }
 
-Node* Node::parent() const { return parent_; }
+Node* Node::parent() const noexcept { return parent_; }
 
 void Node::add_child(std::unique_ptr<Node> child) {
     if (!child) return;
@@ -29,7 +30,7 @@ void Node::add_child(std::unique_ptr<Node> child) {
     children_.push_back(std::move(child));
 }
 
-const std::vector<std::unique_ptr<Node>>& Node::children() const {
+const std::vector<std::unique_ptr<Node>>& Node::children() const noexcept {
     return children_;
 }
 
@@ -39,21 +40,27 @@ void Node::update(double delta_seconds) {
     }
 }
 
-Scene::Scene() : root_("Root") {}
+Scene::Scene()
+    : root_("Root") {}
 
-Node& Scene::root() { return root_; }
+Node& Scene::root() noexcept { return root_; }
 
-const Node& Scene::root() const { return root_; }
+const Node& Scene::root() const noexcept { return root_; }
 
-void Scene::update(double delta_seconds) { root_.update(delta_seconds); }
+void Scene::update(double delta_seconds) {
+    root_.update(delta_seconds);
+}
 
-Engine::Engine(Config config) : config_(std::move(config)) {}
+Engine::Engine(Config config)
+    : config_(std::move(config)) {}
 
 void Engine::set_scene(std::unique_ptr<Scene> scene) {
     scene_ = std::move(scene);
 }
 
-Scene* Engine::scene() { return scene_.get(); }
+Scene* Engine::scene() noexcept {
+    return scene_.get();
+}
 
 void Engine::tick(double delta_seconds) {
     if (!scene_) return;
@@ -93,6 +100,8 @@ void Engine::run_for(double seconds, double fixed_step) {
     }
 }
 
-const Engine::Config& Engine::config() const { return config_; }
+const Engine::Config& Engine::config() const noexcept {
+    return config_;
+}
 
 } // namespace storm
