@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(StormEngine
+    VERSION 0.1.0
+    DESCRIPTION "A small modular game engine for Termux and Android"
+    LANGUAGES CXX
+)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(STORM_BUILD_DEMO "Build the Storm Engine command-line demo" ON)
+
+add_library(storm_core
+    src/storm/core.cpp
+)
+
+target_include_directories(storm_core
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_features(storm_core PUBLIC cxx_std_17)
+
+if(STORM_BUILD_DEMO)
+    add_executable(storm_demo
+        examples/hello_world.cpp
+    )
+    target_link_libraries(storm_demo PRIVATE storm_core)
+endif()
