@@ -38,6 +38,13 @@ jobs:
             sudo apt-get install -y clang
           fi
 
+      - name: Validate CMake presets
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --list-presets
+          ctest --help >/dev/null
+
       - name: Configure
         shell: bash
         env:
@@ -45,24 +52,34 @@ jobs:
           CXX: ${{ matrix.compiler == 'clang' && 'clang++' || 'g++' }}
         run: |
           set -euo pipefail
-          cmake -S . -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DSTORM_BUILD_DEMO=ON \
-            -DSTORM_BUILD_TESTS=ON \
-            -DSTORM_ENABLE_WARNINGS=ON
+          if [ "${{ matrix.build_type }}" = "Debug" ]; then
+            preset=debug
+          else
+            preset=release
+          fi
+          cmake --preset "${preset}" -DSTORM_ENABLE_WARNINGS=ON
 
       - name: Build
         shell: bash
         run: |
           set -euo pipefail
-          cmake --build build --parallel
+          if [ "${{ matrix.build_type }}" = "Debug" ]; then
+            preset=debug
+          else
+            preset=release
+          fi
+          cmake --build --preset "${preset}" --parallel
 
       - name: Test
         shell: bash
         run: |
           set -euo pipefail
-          ctest --test-dir build --output-on-failure --no-tests=error
+          if [ "${{ matrix.build_type }}" = "Debug" ]; then
+            preset=debug
+          else
+            preset=release
+          fi
+          ctest --preset "${preset}"
 
   sanitizer:
     name: GCC / Address + Undefined Sanitizers
