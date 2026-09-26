@@ -31,16 +31,6 @@ add_library(storm_core
 )
 
 target_include_directories(storm_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_features(storm_core PUBLIC cxx_std_17)
-
-if(STORM_ENABLE_WARNINGS)
-    if(MSVC)
-        target_compile_options(storm_core PRIVATE /W4)
-    else()
-        target_compile_options(storm_core PRIVATE -Wall -Wextra -Wpedantic)
-    endif()
-endif()
-
 if(STORM_BUILD_INSTALL)
     install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS storm_core EXPORT StormEngineTargets
@@ -50,6 +40,16 @@ if(STORM_BUILD_INSTALL)
     install(EXPORT StormEngineTargets
         NAMESPACE StormEngine::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/StormEngine)
+endif()
+
+target_compile_features(storm_core PUBLIC cxx_std_17)
+
+if(STORM_ENABLE_WARNINGS)
+    if(MSVC)
+        target_compile_options(storm_core PRIVATE /W4)
+    else()
+        target_compile_options(storm_core PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
 endif()
 
 if(STORM_BUILD_DEMO)
