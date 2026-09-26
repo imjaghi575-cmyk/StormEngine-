@@ -21,6 +21,10 @@ ctest --test-dir build --output-on-failure
 
 Android native integration should use the NDK and CMake rather than mixing platform code into the core library. The Android layer will be added separately from the engine core.
 
+## Formatting
+
+Run `clang-format` with the repository `.clang-format` file on changed C++ files before committing. Keep LF line endings and the `.editorconfig` indentation rules.
+
 ## Commit style
 
 Use short conventional prefixes such as:
