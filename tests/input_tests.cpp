@@ -1,6 +1,7 @@
 #include "storm/input.hpp"
 
 #include <cassert>
+#include <limits>
 
 int main() {
     storm::InputState state;
@@ -68,6 +69,16 @@ int main() {
         25.0f
     });
     assert(!state.is_down(storm::PointerButton::Primary));
+    assert(state.pointer_x() == 13.0f);
+    assert(state.pointer_y() == 25.0f);
+
+    state.apply({
+        storm::InputEventType::PointerMoved,
+        storm::KeyCode::Unknown,
+        storm::PointerButton::None,
+        std::numeric_limits<float>::quiet_NaN(),
+        std::numeric_limits<float>::infinity()
+    });
     assert(state.pointer_x() == 13.0f);
     assert(state.pointer_y() == 25.0f);
 
