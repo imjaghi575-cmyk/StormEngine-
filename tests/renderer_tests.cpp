@@ -72,6 +72,14 @@ int main() {
         {200, 100, 50, 255}
     });
     renderer->draw_sprite({1, 0, 1, 1}, opaque_texture);
+    renderer->draw_rect({3, 0, 1, 1}, {0, 255, 0, 128});
+    assert(software->framebuffer()[3].r >= 4 &&
+           software->framebuffer()[3].r <= 5);
+    assert(software->framebuffer()[3].g >= 137 &&
+           software->framebuffer()[3].g <= 138);
+    assert(software->framebuffer()[3].b >= 14 &&
+           software->framebuffer()[3].b <= 15);
+    assert(software->framebuffer()[3].a == 255);
     assert(software->framebuffer()[1].r == 200);
     assert(software->framebuffer()[1].g == 100);
     assert(software->framebuffer()[1].b == 50);
