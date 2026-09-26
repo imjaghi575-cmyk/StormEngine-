@@ -1,6 +1,7 @@
 #include "storm/core.hpp"
 
 #include <algorithm>
+#include <thread>
 #include <utility>
 
 namespace storm {
