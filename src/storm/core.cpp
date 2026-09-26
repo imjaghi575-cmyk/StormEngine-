@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cmath>
 #include <thread>
+#include <cstddef>
 #include <utility>
 
 namespace storm {
@@ -35,8 +36,9 @@ const std::vector<std::unique_ptr<Node>>& Node::children() const noexcept {
 }
 
 void Node::update(double delta_seconds) {
-    for (const auto& child : children_) {
-        child->update(delta_seconds);
+    const auto child_count = children_.size();
+    for (std::size_t index = 0; index < child_count; ++index) {
+        children_[index]->update(delta_seconds);
     }
 }
 
