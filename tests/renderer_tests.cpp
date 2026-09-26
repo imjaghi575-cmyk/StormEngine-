@@ -1,7 +1,6 @@
 #include "storm/render.hpp"
 
 #include <cassert>
-#include <cmath>
 #include <limits>
 
 int main() {
@@ -36,6 +35,15 @@ int main() {
 
     renderer->draw_rect({0, 0, 1, 1}, {255, 0, 0, 255});
     renderer->end_frame();
+
+    assert(renderer->initialize(320, 240, "Reinitialize"));
+    assert(renderer->width() == 320);
+    assert(renderer->height() == 240);
+
+    renderer->shutdown();
+    renderer->shutdown();
+    assert(renderer->width() == 0);
+    assert(renderer->height() == 0);
 
     return 0;
 }
