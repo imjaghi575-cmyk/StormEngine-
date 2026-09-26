@@ -1,6 +1,5 @@
 #include "storm/input.hpp"
 
-#include <cassert>
 
 namespace storm {
 
@@ -36,11 +35,14 @@ std::size_t InputQueue::size() const noexcept {
     return events_.size();
 }
 
-InputEvent InputQueue::pop() {
-    assert(!events_.empty());
-    const InputEvent event = events_.front();
+bool InputQueue::try_pop(InputEvent& event) noexcept {
+    if (events_.empty()) {
+        return false;
+    }
+
+    event = events_.front();
     events_.pop_front();
-    return event;
+    return true;
 }
 
 void InputQueue::clear() noexcept {
