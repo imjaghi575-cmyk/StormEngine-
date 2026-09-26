@@ -25,14 +25,14 @@ Do not commit generated `build/` directories.
 
 ## Android NDK
 
-The Android preset intentionally uses the NDK-provided CMake toolchain rather than CMake's built-in Android platform support.
+The Android preset intentionally uses the NDK-provided CMake toolchain. CI pins the stable Android NDK r29 version and verifies the downloaded Android command-line tools against Google's published SHA-256 checksum.
 
 Set `ANDROID_NDK_HOME` to the installed NDK directory, then run:
 
     cmake --preset android-arm64
     cmake --build build/android-arm64
 
-The preset targets `arm64-v8a` and Android API 24. The Android application/packaging layer is not part of this preset yet; this preset validates cross-compilation of the engine core.
+The preset targets `arm64-v8a` and Android API 24. The Android NDK version is pinned for reproducible CI builds; update it only after checking the current official NDK release documentation and rerunning CI. The Android application/packaging layer is not part of this preset yet; this preset validates cross-compilation of the engine core.
 
 ## CI
 
