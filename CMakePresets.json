@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 4,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 23,
@@ -9,6 +9,7 @@
     {
       "name": "debug",
       "displayName": "Storm Debug",
+      "description": "Debug build with demos and tests",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/debug",
       "cacheVariables": {
@@ -20,6 +21,7 @@
     {
       "name": "release",
       "displayName": "Storm Release",
+      "description": "Release build with tests",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/release",
       "cacheVariables": {
@@ -45,14 +47,16 @@
       "configurePreset": "debug",
       "output": {
         "outputOnFailure": true
-      }
+      },
+      "noTestsAction": "error"
     },
     {
       "name": "release",
       "configurePreset": "release",
       "output": {
         "outputOnFailure": true
-      }
+      },
+      "noTestsAction": "error"
     }
   ]
 }
