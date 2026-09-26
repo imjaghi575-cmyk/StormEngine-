@@ -1,8 +1,6 @@
 #include "storm/core.hpp"
 
-#include <algorithm>
 #include <chrono>
-#include <cmath>
 #include <thread>
 #include <utility>
 
@@ -53,10 +51,10 @@ void Scene::update(double delta_seconds) {
 }
 
 Engine::Engine()
-    : config_{} {}
+    : config_{}, clock_(config_.max_delta_seconds) {}
 
 Engine::Engine(Config config)
-    : config_(std::move(config)) {}
+    : config_(std::move(config)), clock_(config_.max_delta_seconds) {}
 
 void Engine::set_scene(std::unique_ptr<Scene> scene) {
     scene_ = std::move(scene);
@@ -67,17 +65,8 @@ Scene* Engine::scene() noexcept {
 }
 
 void Engine::tick(double delta_seconds) {
-    if (!scene_ || !std::isfinite(delta_seconds)) return;
-
-    const double max_delta =
-        std::isfinite(config_.max_delta_seconds)
-            ? std::max(0.0, config_.max_delta_seconds)
-            : 0.0;
-
-    const double clamped_delta =
-        std::clamp(delta_seconds, 0.0, max_delta);
-
-    scene_->update(clamped_delta);
+    if (!scene_) return;
+    scene_->update(clock_.tick(delta_seconds));
 }
 
 void Engine::run_for(double seconds, double fixed_step) {
@@ -102,19 +91,12 @@ void Engine::run_for(double seconds, double fixed_step) {
 
         tick(frame_delta);
 
+        const auto sleep_time = std::chrono::duration<double>(fixed_step);
         const auto after_tick = std::chrono::steady_clock::now();
-        const double spent =
-            std::chrono::duration<double>(after_tick - now).count();
-        const double remaining = seconds - elapsed;
+        const auto spent = after_tick - now;
 
-        if (remaining <= 0.0) break;
-
-        const double sleep_seconds =
-            std::min(fixed_step, std::max(0.0, remaining - spent));
-
-        if (sleep_seconds > 0.0) {
-            std::this_thread::sleep_for(
-                std::chrono::duration<double>(sleep_seconds));
+        if (spent < sleep_time) {
+            std::this_thread::sleep_for(sleep_time - spent);
         }
     }
 }
