@@ -36,6 +36,6 @@ The preset targets `arm64-v8a` and Android API 24. The Android NDK version is pi
 
 ## CI
 
-GitHub Actions validates GCC and Clang Debug/Release builds and runs CTest. A separate sanitizer job runs AddressSanitizer and UndefinedBehaviorSanitizer.
+GitHub Actions validates GCC and Clang Debug/Release builds and runs CTest. A separate sanitizer job runs AddressSanitizer and UndefinedBehaviorSanitizer. CI also installs the CMake package and compiles an external consumer against `StormEngine::storm_core`.
 
 A CI result is considered authoritative only after the corresponding GitHub Actions run reports success. Local source inspection alone is not treated as proof that the complete repository builds.
