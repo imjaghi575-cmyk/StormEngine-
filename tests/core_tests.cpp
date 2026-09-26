@@ -51,6 +51,14 @@ int main() {
     engine.set_scene(std::move(engine_scene));
     assert(engine.scene() != nullptr);
 
+    engine.queue_input({storm::InputEventType::KeyPressed, storm::KeyCode::A});
+    assert(!engine.input().is_down(storm::KeyCode::A));
+    engine.tick(0.0);
+    assert(engine.input().is_down(storm::KeyCode::A));
+    engine.queue_input({storm::InputEventType::KeyReleased, storm::KeyCode::A});
+    engine.tick(0.0);
+    assert(!engine.input().is_down(storm::KeyCode::A));
+
     engine.tick(1.0);
     assert(std::abs(engine_child_ptr->position().x - 0.1f) < 0.0001f);
 
