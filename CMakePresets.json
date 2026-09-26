@@ -48,7 +48,10 @@
       "output": {
         "outputOnFailure": true
       },
-      "noTestsAction": "error"
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
     },
     {
       "name": "release",
@@ -56,7 +59,10 @@
       "output": {
         "outputOnFailure": true
       },
-      "noTestsAction": "error"
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
     }
   ]
 }
