@@ -62,6 +62,15 @@ int main() {
     engine.tick(std::numeric_limits<double>::quiet_NaN());
     assert(std::isfinite(engine_child_ptr->position().x));
 
+    const float before_invalid_runs = engine_child_ptr->position().x;
+    engine.run_for(-1.0);
+    engine.run_for(0.0);
+    engine.run_for(0.01, 0.0);
+    engine.run_for(0.01, -1.0);
+    engine.run_for(std::numeric_limits<double>::quiet_NaN());
+    engine.run_for(0.01, std::numeric_limits<double>::quiet_NaN());
+    assert(std::abs(engine_child_ptr->position().x - before_invalid_runs) < 0.0001f);
+
     storm::Engine invalid_engine({
         "Invalid Config",
         -1.0
