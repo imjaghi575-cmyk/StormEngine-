@@ -6,6 +6,7 @@ int main() {
     storm::InputState state;
 
     assert(!state.is_down(storm::KeyCode::A));
+    assert(!state.quit_requested());
     state.apply({storm::InputEventType::KeyPressed, storm::KeyCode::A});
     assert(state.is_down(storm::KeyCode::A));
 
@@ -16,6 +17,10 @@ int main() {
     assert(state.is_down(storm::KeyCode::Z));
     state.clear();
     assert(!state.is_down(storm::KeyCode::Z));
+    state.apply({storm::InputEventType::Quit});
+    assert(state.quit_requested());
+    state.clear();
+    assert(!state.quit_requested());
 
     storm::InputQueue queue;
     assert(queue.empty());
