@@ -8,6 +8,40 @@
 
 namespace storm {
 
+namespace {
+
+Color blend_source_over(Color source, Color destination) noexcept {
+    if (source.a == 0) return destination;
+    if (source.a == 255) return source;
+
+    const std::uint64_t sa = source.a;
+    const std::uint64_t da = destination.a;
+    const std::uint64_t inverse_sa = 255U - sa;
+    const std::uint64_t out_a = sa + (da * inverse_sa + 127U) / 255U;
+    if (out_a == 0) return Color{0, 0, 0, 0};
+
+    const auto blend_channel = [sa, da, inverse_sa, out_a](
+                                   std::uint8_t source_channel,
+                                   std::uint8_t destination_channel) {
+        const std::uint64_t numerator =
+            static_cast<std::uint64_t>(source_channel) * sa * 255U +
+            static_cast<std::uint64_t>(destination_channel) * da *
+                inverse_sa;
+        const std::uint64_t denominator = 255U * out_a;
+        return static_cast<std::uint8_t>(
+            (numerator + denominator / 2U) / denominator);
+    };
+
+    return {
+        blend_channel(source.r, destination.r),
+        blend_channel(source.g, destination.g),
+        blend_channel(source.b, destination.b),
+        static_cast<std::uint8_t>(out_a)
+    };
+}
+
+} // namespace
+
 Texture2D::Texture2D(int width, int height, std::vector<Color> pixels)
     : width_(width), height_(height), pixels_(std::move(pixels)) {
     if (!valid()) {
@@ -130,12 +164,16 @@ void SoftwareRenderer::draw_sprite(const Rect& destination,
             const int sx = std::clamp(
                 static_cast<int>(u * static_cast<double>(source_width)),
                 0, source_width - 1);
-            pixels_[static_cast<std::size_t>(y) *
-                        static_cast<std::size_t>(width_) +
-                    static_cast<std::size_t>(x)] =
+            auto& destination_pixel =
+                pixels_[static_cast<std::size_t>(y) *
+                            static_cast<std::size_t>(width_) +
+                        static_cast<std::size_t>(x)];
+            const auto source_pixel =
                 source[static_cast<std::size_t>(sy) *
                            static_cast<std::size_t>(source_width) +
                        static_cast<std::size_t>(sx)];
+            destination_pixel =
+                blend_source_over(source_pixel, destination_pixel);
         }
     }
 }
