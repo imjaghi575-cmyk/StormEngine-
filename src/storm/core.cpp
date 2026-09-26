@@ -65,6 +65,10 @@ Scene* Engine::scene() noexcept {
     return scene_.get();
 }
 
+void Engine::queue_input(InputEvent event) {
+    input_queue_.push(event);
+}
+
 void Engine::tick(double delta_seconds) {
     if (!scene_) return;
     process_input();
