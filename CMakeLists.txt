@@ -18,6 +18,7 @@ option(STORM_ENABLE_WARNINGS "Enable compiler warnings for Storm targets" ON)
 
 add_library(storm_core
     src/storm/core.cpp
+    src/storm/time.cpp
     src/storm/software_renderer.cpp
     src/storm/headless_platform.cpp
 )
