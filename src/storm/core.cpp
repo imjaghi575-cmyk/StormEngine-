@@ -52,10 +52,10 @@ void Scene::update(double delta_seconds) {
 }
 
 Engine::Engine()
-    : config_{}, clock_(config_.max_delta_seconds) {}
+    : config_{}, clock_(config_.max_delta_seconds), fixed_timestep_{} {}
 
 Engine::Engine(Config config)
-    : config_(std::move(config)), clock_(config_.max_delta_seconds) {}
+    : config_(std::move(config)), clock_(config_.max_delta_seconds), fixed_timestep_{} {}
 
 void Engine::set_scene(std::unique_ptr<Scene> scene) {
     scene_ = std::move(scene);
@@ -73,6 +73,14 @@ void Engine::tick(double delta_seconds) {
     process_input();
     if (!scene_) return;
     scene_->update(clock_.tick(delta_seconds));
+}
+
+int Engine::fixed_update(double elapsed_seconds) {
+    process_input();
+    if (!scene_) return 0;
+    return fixed_timestep_.advance(elapsed_seconds, [this](double delta_seconds) {
+        scene_->update(delta_seconds);
+    });
 }
 
 void Engine::process_input() {
