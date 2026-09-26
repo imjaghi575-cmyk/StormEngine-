@@ -13,7 +13,7 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Platform abstraction and headless backend
 - Input state and queued keyboard/pointer events
 - Deterministic fixed-timestep update support
-- Renderer2D abstraction
+- Renderer2D abstraction with deterministic software texture drawing
 - Software renderer test backend with deterministic in-memory framebuffer
 - Seven CTest core/platform/renderer/time/input/fixed-timestep/resource test targets
 - Resource abstraction with deterministic memory and bounded file providers
