@@ -1,5 +1,7 @@
 #pragma once
 
+#include "storm/time.hpp"
+
 #include <cmath>
 #include <memory>
 #include <string>
@@ -99,6 +101,7 @@ public:
 
 private:
     Config config_;
+    FrameClock clock_;
     std::unique_ptr<Scene> scene_;
 };
 
