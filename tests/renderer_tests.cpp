@@ -45,6 +45,11 @@ int main() {
         {0, 0, 255, 255}, {255, 255, 255, 255}
     });
     assert(texture.valid());
+    storm::Texture2D invalid_texture(2, 2, {{255, 255, 255, 255}});
+    assert(!invalid_texture.valid());
+    storm::Texture2D huge_texture(std::numeric_limits<int>::max(),
+                                  std::numeric_limits<int>::max(), {});
+    assert(!huge_texture.valid());
     renderer->draw_sprite({20, 20, 16, 16}, texture);
     assert(software->framebuffer()[20U * 640U + 20U].r == 255);
     assert(software->framebuffer()[20U * 640U + 27U].g == 255);
