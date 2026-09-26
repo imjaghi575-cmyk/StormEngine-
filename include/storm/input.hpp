@@ -53,6 +53,7 @@ enum class PointerButton : std::uint8_t {
 enum class InputEventType : std::uint8_t {
     KeyPressed,
     KeyReleased,
+    Quit,
     PointerMoved,
     PointerPressed,
     PointerReleased
@@ -75,6 +76,7 @@ public:
 
     float pointer_x() const noexcept;
     float pointer_y() const noexcept;
+    bool quit_requested() const noexcept;
 
     void clear() noexcept;
 
@@ -88,6 +90,7 @@ private:
     bool pointer_buttons_[pointer_button_count]{};
     float pointer_x_{0.0f};
     float pointer_y_{0.0f};
+    bool quit_requested_{false};
 };
 
 class InputQueue {
