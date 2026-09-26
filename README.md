@@ -15,7 +15,8 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Deterministic fixed-timestep update support
 - Renderer2D abstraction
 - Software renderer test backend with deterministic in-memory framebuffer
-- Six CTest core/platform/renderer/time/input/fixed-timestep test targets
+- Seven CTest core/platform/renderer/time/input/fixed-timestep/resource test targets
+- Resource abstraction with deterministic in-memory provider
 - GCC and Clang Debug/Release CI
 - GCC AddressSanitizer/UndefinedBehaviorSanitizer CI
 - CMake Debug/Release/Android arm64 presets using Ninja
