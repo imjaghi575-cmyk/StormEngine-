@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 namespace storm {
 
@@ -26,7 +27,18 @@ public:
     virtual ~ResourceProvider() = default;
 
     virtual std::shared_ptr<const Resource> load(
-        const std::string& path) = 0;
+        const std::string& path) const = 0;
+};
+
+class FileResourceProvider final : public ResourceProvider {
+public:
+    explicit FileResourceProvider(std::filesystem::path root);
+
+    std::shared_ptr<const Resource> load(
+        const std::string& path) const override;
+
+private:
+    std::filesystem::path root_;
 };
 
 class MemoryResourceProvider final : public ResourceProvider {
@@ -36,7 +48,7 @@ public:
     void clear() noexcept;
 
     std::shared_ptr<const Resource> load(
-        const std::string& path) override;
+        const std::string& path) const override;
 
 private:
     struct Entry {
