@@ -40,7 +40,7 @@ Its framebuffer is stored as a contiguous `Color` array. `begin_frame` clears it
 
 ### Resources
 
-The resource layer currently provides a small `Resource` value type and `ResourceProvider` interface. `MemoryResourceProvider` supplies deterministic test data without filesystem or Android dependencies. `FileResourceProvider` is also available for bounded filesystem loading. It canonicalizes the provider root and rejects absolute paths and paths that resolve outside that root. Asynchronous I/O and caching are intentionally not part of this first synchronous API.
+The resource layer currently provides a small `Resource` value type and `ResourceProvider` interface. Platform code consumes the same `storm::InputState` and `storm::InputEvent` types as the engine core; there is no second platform-specific input state model. `MemoryResourceProvider` supplies deterministic test data without filesystem or Android dependencies. `FileResourceProvider` is also available for bounded filesystem loading. It canonicalizes the provider root and rejects absolute paths and paths that resolve outside that root. Asynchronous I/O and caching are intentionally not part of this first synchronous API.
 
 ## Build and test model
 
@@ -53,7 +53,7 @@ The repository uses CMake presets and CTest. CI verifies:
 5. GCC AddressSanitizer + UndefinedBehaviorSanitizer
 6. Android NDK arm64-v8a
 
-The Android build uses the NDK CMake toolchain and does not build desktop demos or tests.
+The Android build uses the NDK CMake toolchain and does not build desktop demos or tests. Optional CMake installation exports `StormEngine::storm_core` through a relocatable package configuration.
 
 ## Development roadmap
 
