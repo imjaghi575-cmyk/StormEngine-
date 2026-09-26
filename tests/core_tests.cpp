@@ -69,8 +69,9 @@ int main() {
     assert(std::abs(engine_child_ptr->position().x -
                     (fixed_scene_before + 8.0f / 60.0f)) < 0.0001f);
 
+    const float after_fixed_update = engine_child_ptr->position().x;
     engine.tick(-1.0);
-    assert(std::abs(engine_child_ptr->position().x - 0.1f) < 0.0001f);
+    assert(std::abs(engine_child_ptr->position().x - after_fixed_update) < 0.0001f);
 
     engine.tick(std::numeric_limits<double>::quiet_NaN());
     assert(std::isfinite(engine_child_ptr->position().x));
