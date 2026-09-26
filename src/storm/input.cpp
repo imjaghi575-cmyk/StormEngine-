@@ -31,11 +31,13 @@ void InputState::apply(const InputEvent& event) noexcept {
 }
 
 bool InputState::is_down(KeyCode key) const noexcept {
+    if (key == KeyCode::Unknown) return false;
     const auto index = static_cast<std::size_t>(key);
     return index < key_count && keys_[index];
 }
 
 bool InputState::is_down(PointerButton button) const noexcept {
+    if (button == PointerButton::None) return false;
     const auto index = static_cast<std::size_t>(button);
     return index < pointer_button_count && pointer_buttons_[index];
 }
