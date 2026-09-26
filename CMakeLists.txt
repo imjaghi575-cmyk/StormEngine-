@@ -16,6 +16,7 @@ option(STORM_BUILD_TESTS "Build Storm Engine tests" ON)
 add_library(storm_core
     src/storm/core.cpp
     src/storm/software_renderer.cpp
+    src/storm/headless_platform.cpp
 )
 
 target_include_directories(storm_core
@@ -35,7 +36,12 @@ endif()
 
 if(STORM_BUILD_TESTS)
     enable_testing()
+
     add_executable(storm_core_tests tests/core_tests.cpp)
     target_link_libraries(storm_core_tests PRIVATE storm_core)
     add_test(NAME storm_core_tests COMMAND storm_core_tests)
+
+    add_executable(storm_platform_tests tests/platform_tests.cpp)
+    target_link_libraries(storm_platform_tests PRIVATE storm_core)
+    add_test(NAME storm_platform_tests COMMAND storm_platform_tests)
 endif()
