@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstdint>
 #include <vector>
+#include <filesystem>
+#include <fstream>
 
 int main() {
     storm::Resource empty;
@@ -37,6 +39,25 @@ int main() {
     provider.clear();
     assert(provider.load("a") == nullptr);
     assert(provider.load("b") == nullptr);
+
+    const auto root = std::filesystem::temp_directory_path() / "storm-resource-test";
+    std::filesystem::create_directories(root / "nested");
+    {
+        std::ofstream file(root / "nested" / "data.bin", std::ios::binary);
+        file << "abc";
+    }
+
+    const storm::FileResourceProvider files(root);
+    auto loaded = files.load("nested/data.bin");
+    assert(loaded != nullptr);
+    assert(loaded->size() == 3);
+    assert(loaded->data()[0] == static_cast<std::uint8_t>('a'));
+    assert(files.load("") == nullptr);
+    assert(files.load("../data.bin") == nullptr);
+    assert(files.load(root.string()) == nullptr);
+    assert(files.load("missing.bin") == nullptr);
+
+    std::filesystem::remove_all(root);
 
     return 0;
 }
