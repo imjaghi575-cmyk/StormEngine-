@@ -27,7 +27,7 @@ public:
         if (!spawned_) {
             auto child = std::make_unique<TestNode>();
             spawned_child_ = child.get();
-            add_child(std::move(child));
+            parent()->add_child(std::move(child));
             spawned_ = true;
         }
         storm::Node::update(delta_seconds);
