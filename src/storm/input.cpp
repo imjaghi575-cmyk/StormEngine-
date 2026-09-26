@@ -4,6 +4,9 @@ namespace storm {
 
 void InputState::apply(const InputEvent& event) noexcept {
     switch (event.type) {
+    case InputEventType::Quit:
+        quit_requested_ = true;
+        break;
     case InputEventType::KeyPressed:
     case InputEventType::KeyReleased: {
         const auto index = static_cast<std::size_t>(event.key);
@@ -50,6 +53,10 @@ float InputState::pointer_y() const noexcept {
     return pointer_y_;
 }
 
+bool InputState::quit_requested() const noexcept {
+    return quit_requested_;
+}
+
 void InputState::clear() noexcept {
     for (bool& key : keys_) {
         key = false;
@@ -59,6 +66,7 @@ void InputState::clear() noexcept {
     }
     pointer_x_ = 0.0f;
     pointer_y_ = 0.0f;
+    quit_requested_ = false;
 }
 
 void InputQueue::push(InputEvent event) {
