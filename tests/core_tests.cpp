@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <limits>
 #include <memory>
 
 class TestNode final : public storm::Node {
