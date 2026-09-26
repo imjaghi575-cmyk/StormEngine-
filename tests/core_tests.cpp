@@ -1,6 +1,7 @@
 #include "storm/core.hpp"
 
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <limits>
 #include <memory>
@@ -86,14 +87,43 @@ int main() {
         -1.0
     });
     auto invalid_scene = std::make_unique<storm::Scene>();
-    auto* invalid_root = &invalid_scene->root();
     auto invalid_child = std::make_unique<TestNode>();
     auto* invalid_child_ptr = invalid_child.get();
-    invalid_root->add_child(std::move(invalid_child));
+    invalid_scene->root().add_child(std::move(invalid_child));
     invalid_engine.set_scene(std::move(invalid_scene));
 
     invalid_engine.tick(1.0);
     assert(std::abs(invalid_child_ptr->position().x) < 0.0001f);
+
+    storm::Engine nonfinite_engine({
+        "Nonfinite Config",
+        std::numeric_limits<double>::infinity()
+    });
+    auto nonfinite_scene = std::make_unique<storm::Scene>();
+    auto nonfinite_child = std::make_unique<TestNode>();
+    auto* nonfinite_child_ptr = nonfinite_child.get();
+    nonfinite_scene->root().add_child(std::move(nonfinite_child));
+    nonfinite_engine.set_scene(std::move(nonfinite_scene));
+
+    nonfinite_engine.tick(1.0);
+    assert(std::abs(nonfinite_child_ptr->position().x) < 0.0001f);
+
+    auto timed_scene = std::make_unique<storm::Scene>();
+    auto timed_child = std::make_unique<TestNode>();
+    auto* timed_child_ptr = timed_child.get();
+    timed_scene->root().add_child(std::move(timed_child));
+    engine.set_scene(std::move(timed_scene));
+
+    const auto start = std::chrono::steady_clock::now();
+    engine.run_for(0.03, 0.01);
+    const double duration =
+        std::chrono::duration<double>(
+            std::chrono::steady_clock::now() - start).count();
+
+    assert(duration >= 0.02);
+    assert(duration < 0.20);
+    assert(timed_child_ptr->position().x >= 0.0f);
+    assert(timed_child_ptr->position().x < 0.10f);
 
     engine.set_scene(nullptr);
     assert(engine.scene() == nullptr);
