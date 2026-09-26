@@ -7,17 +7,23 @@ namespace storm {
 class HeadlessPlatform final : public Platform {
 public:
     bool initialize(int width, int height, const char*) override {
-        if (width <= 0 || height <= 0) return false;
+        if (width <= 0 || height <= 0) {
+            shutdown();
+            return false;
+        }
+
         width_ = width;
         height_ = height;
+        initialized_ = true;
         return true;
     }
 
     bool poll_events(InputState&) override {
-        return true;
+        return initialized_;
     }
 
     void shutdown() override {
+        initialized_ = false;
         width_ = 0;
         height_ = 0;
     }
@@ -28,6 +34,7 @@ public:
 private:
     int width_{0};
     int height_{0};
+    bool initialized_{false};
 };
 
 std::unique_ptr<Platform> create_headless_platform() {
