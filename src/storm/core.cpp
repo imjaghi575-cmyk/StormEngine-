@@ -76,8 +76,9 @@ void Engine::tick(double delta_seconds) {
 }
 
 void Engine::process_input() {
-    while (!input_queue_.empty()) {
-        input_state_.apply(input_queue_.pop());
+    InputEvent event;
+    while (input_queue_.try_pop(event)) {
+        input_state_.apply(event);
     }
 }
 
