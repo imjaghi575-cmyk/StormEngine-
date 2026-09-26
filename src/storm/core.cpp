@@ -68,8 +68,9 @@ Scene* Engine::scene() noexcept {
 void Engine::tick(double delta_seconds) {
     if (!scene_) return;
 
+    const double max_delta = std::max(0.0, config_.max_delta_seconds);
     const double clamped_delta =
-        std::clamp(delta_seconds, 0.0, config_.max_delta_seconds);
+        std::clamp(delta_seconds, 0.0, max_delta);
 
     scene_->update(clamped_delta);
 }
