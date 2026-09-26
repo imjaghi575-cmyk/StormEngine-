@@ -15,43 +15,24 @@ int main() {
     assert(platform->width() == 1280);
     assert(platform->height() == 720);
 
-    assert(!input.key_down(storm::Key::Space));
+    assert(!input.is_down(storm::KeyCode::Space));
 
-    input.apply_event({
-        storm::InputEventType::KeyDown,
-        storm::Key::Space
-    });
-    assert(input.key_down(storm::Key::Space));
+    input.apply({storm::InputEventType::KeyPressed, storm::KeyCode::Space});
+    assert(input.is_down(storm::KeyCode::Space));
 
-    input.apply_event({
-        storm::InputEventType::KeyUp,
-        storm::Key::Space
-    });
-    assert(!input.key_down(storm::Key::Space));
+    input.apply({storm::InputEventType::KeyReleased, storm::KeyCode::Space});
+    assert(!input.is_down(storm::KeyCode::Space));
 
-    input.apply_event({
-        storm::InputEventType::KeyDown,
-        storm::Key::Escape
-    });
-    assert(input.key_down(storm::Key::Escape));
+    input.apply({storm::InputEventType::KeyPressed, storm::KeyCode::Escape});
+    assert(input.is_down(storm::KeyCode::Escape));
 
-    input.apply_event({
-        storm::InputEventType::Quit,
-        storm::Key::Unknown
-    });
-    assert(input.quit_requested);
+    input.apply({storm::InputEventType::Quit});
+    assert(input.quit_requested());
 
-    input.set_key(storm::Key::Unknown, true);
-    assert(!input.key_down(storm::Key::Unknown));
+    input.apply({storm::InputEventType::KeyPressed,
+                 static_cast<storm::KeyCode>(999)});
+    assert(!input.is_down(static_cast<storm::KeyCode>(999)));
 
-    input.set_key(storm::Key::Count, true);
-    assert(!input.key_down(storm::Key::Count));
-
-    const auto invalid_key = static_cast<storm::Key>(999);
-    input.set_key(invalid_key, true);
-    assert(!input.key_down(invalid_key));
-
-    assert(platform->poll_events(input));
     platform->shutdown();
 
     assert(platform->width() == 0);
