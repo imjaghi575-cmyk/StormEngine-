@@ -51,6 +51,6 @@ Android integration must be based on current official Android/NDK documentation.
 
 ## CI
 
-GitHub Actions verifies GCC and Clang Debug/Release builds and a GCC AddressSanitizer/UndefinedBehaviorSanitizer build.
+GitHub Actions verifies GCC and Clang Debug/Release builds, a GCC AddressSanitizer/UndefinedBehaviorSanitizer build, Android arm64-v8a cross-compilation, and an installed-package consumer build.
 
 A missing workflow result is not treated as a passing result.
