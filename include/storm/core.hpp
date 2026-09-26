@@ -96,6 +96,7 @@ public:
     Scene* scene() noexcept;
 
     void tick(double delta_seconds);
+    void queue_input(InputEvent event);
     void process_input();
     InputState& input() noexcept;
     const InputState& input() const noexcept;
