@@ -69,6 +69,14 @@ void Engine::queue_input(InputEvent event) {
     input_queue_.push(event);
 }
 
+void Engine::set_fixed_step(double step_seconds) noexcept {
+    fixed_timestep_.set_step(step_seconds);
+}
+
+double Engine::fixed_step() const noexcept {
+    return fixed_timestep_.step();
+}
+
 void Engine::tick(double delta_seconds) {
     process_input();
     if (!scene_) return;
@@ -104,6 +112,9 @@ void Engine::run_for(double seconds, double fixed_step) {
         return;
     }
 
+    const double previous_fixed_step = this->fixed_step();
+    set_fixed_step(fixed_step);
+
     const auto start = std::chrono::steady_clock::now();
     auto previous = start;
 
@@ -118,7 +129,7 @@ void Engine::run_for(double seconds, double fixed_step) {
             std::chrono::duration<double>(now - previous).count();
         previous = now;
 
-        tick(frame_delta);
+        fixed_update(frame_delta);
 
         const auto deadline =
             start + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
@@ -134,6 +145,8 @@ void Engine::run_for(double seconds, double fixed_step) {
             std::this_thread::sleep_until(next_wakeup);
         }
     }
+
+    set_fixed_step(previous_fixed_step);
 }
 
 const Engine::Config& Engine::config() const noexcept {
