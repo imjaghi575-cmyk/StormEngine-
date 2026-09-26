@@ -40,7 +40,7 @@ Its framebuffer is stored as a contiguous `Color` array. `begin_frame` clears it
 
 ### Resources
 
-The resource layer currently provides a small `Resource` value type and `ResourceProvider` interface. `MemoryResourceProvider` supplies deterministic test data without filesystem or Android dependencies. It is intentionally not a file loader yet; path normalization, asynchronous I/O, caching policy, and platform storage should be defined before adding those responsibilities.
+The resource layer currently provides a small `Resource` value type and `ResourceProvider` interface. `MemoryResourceProvider` supplies deterministic test data without filesystem or Android dependencies. `FileResourceProvider` is also available for bounded filesystem loading. It canonicalizes the provider root and rejects absolute paths and paths that resolve outside that root. Asynchronous I/O and caching are intentionally not part of this first synchronous API.
 
 ## Build and test model
 
@@ -59,13 +59,13 @@ The Android build uses the NDK CMake toolchain and does not build desktop demos 
 
 The next engine layers should be implemented in this order:
 
-1. Filesystem/Android-backed resource providers with explicit path and error policy.
-2. Texture/image representation that can feed renderer backends.
-3. A real Android platform/application layer using NDK-supported APIs.
-4. OpenGL ES rendering behind `Renderer2D`.
-5. Audio abstraction and an Android backend.
-6. Serialization and scene/resource loading.
-7. Profiling/diagnostics and broader integration tests.
-8. Tooling/editor functionality only after the runtime APIs stabilize.
+1. Image/pixel-format resources that can feed renderer backends.
+2. A real Android platform/application layer using NDK-supported APIs.
+3. OpenGL ES rendering behind `Renderer2D`.
+4. Audio abstraction and an Android backend.
+5. Serialization and scene/resource loading.
+6. Profiling/diagnostics and broader integration tests.
+7. Tooling/editor functionality only after the runtime APIs stabilize.
+
 
 Each layer should add tests before it becomes a dependency of another layer.
