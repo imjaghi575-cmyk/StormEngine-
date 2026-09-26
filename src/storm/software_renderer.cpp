@@ -40,12 +40,25 @@ void SoftwareRenderer::begin_frame(Color clear_color) {
 void SoftwareRenderer::draw_rect(const Rect& rect, Color color) {
     if (!initialized_ || !valid_rect(rect)) return;
 
-    const int left = std::max(0, static_cast<int>(std::floor(rect.x)));
-    const int top = std::max(0, static_cast<int>(std::floor(rect.y)));
-    const int right = std::min(
-        width_, static_cast<int>(std::ceil(rect.x + rect.width)));
-    const int bottom = std::min(
-        height_, static_cast<int>(std::ceil(rect.y + rect.height)));
+    const double x0 = static_cast<double>(rect.x);
+    const double y0 = static_cast<double>(rect.y);
+    const double x1 = x0 + static_cast<double>(rect.width);
+    const double y1 = y0 + static_cast<double>(rect.height);
+
+    if (x1 <= 0.0 || y1 <= 0.0 ||
+        x0 >= static_cast<double>(width_) ||
+        y0 >= static_cast<double>(height_)) {
+        return;
+    }
+
+    const int left = x0 <= 0.0 ? 0 : static_cast<int>(std::floor(x0));
+    const int top = y0 <= 0.0 ? 0 : static_cast<int>(std::floor(y0));
+    const int right = x1 >= static_cast<double>(width_)
+                          ? width_
+                          : static_cast<int>(std::ceil(x1));
+    const int bottom = y1 >= static_cast<double>(height_)
+                           ? height_
+                           : static_cast<int>(std::ceil(y1));
 
     for (int y = top; y < bottom; ++y) {
         for (int x = left; x < right; ++x) {
