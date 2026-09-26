@@ -73,24 +73,13 @@ void MemoryResourceProvider::put(std::string path,
                                  std::vector<std::uint8_t> data) {
     if (path.empty()) return;
 
-    const auto resource = std::make_shared<const Resource>(std::move(data));
-    for (auto& entry : resources_) {
-        if (entry.path == path) {
-            entry.resource = resource;
-            return;
-        }
-    }
-
-    resources_.push_back({std::move(path), resource});
+    resources_[std::move(path)] =
+        std::make_shared<const Resource>(std::move(data));
 }
 
 void MemoryResourceProvider::remove(const std::string& path) {
-    for (auto it = resources_.begin(); it != resources_.end(); ++it) {
-        if (it->path == path) {
-            resources_.erase(it);
-            return;
-        }
-    }
+    if (path.empty()) return;
+    resources_.erase(path);
 }
 
 void MemoryResourceProvider::clear() noexcept {
@@ -101,11 +90,8 @@ std::shared_ptr<const Resource> MemoryResourceProvider::load(
     const std::string& path) const {
     if (path.empty()) return nullptr;
 
-    for (const auto& entry : resources_) {
-        if (entry.path == path) return entry.resource;
-    }
-
-    return nullptr;
+    const auto it = resources_.find(path);
+    return it == resources_.end() ? nullptr : it->second;
 }
 
 } // namespace storm
