@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <thread>
 #include <utility>
 
@@ -66,7 +67,7 @@ Scene* Engine::scene() noexcept {
 }
 
 void Engine::tick(double delta_seconds) {
-    if (!scene_) return;
+    if (!scene_ || !std::isfinite(delta_seconds)) return;
 
     const double max_delta = std::max(0.0, config_.max_delta_seconds);
     const double clamped_delta =
@@ -76,7 +77,10 @@ void Engine::tick(double delta_seconds) {
 }
 
 void Engine::run_for(double seconds, double fixed_step) {
-    if (seconds <= 0.0 || fixed_step <= 0.0) return;
+    if (!std::isfinite(seconds) || !std::isfinite(fixed_step) ||
+        seconds <= 0.0 || fixed_step <= 0.0) {
+        return;
+    }
 
     const auto start = std::chrono::steady_clock::now();
     auto previous = start;
