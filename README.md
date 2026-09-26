@@ -14,27 +14,32 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Input state abstraction
 - Renderer2D abstraction
 - Software renderer smoke-test backend
-- CTest core/platform tests
-- GitHub Actions CI
-- CMake Debug/Release presets
+- Four CTest core/platform/renderer/time test targets
+- GCC and Clang Debug/Release CI
+- GCC AddressSanitizer/UndefinedBehaviorSanitizer CI
+- CMake Debug/Release presets using Ninja
 
 The software renderer is intentionally a test backend. It does not create a graphical window.
 
 ## Requirements
 
-For native Termux builds: Clang/C++17, CMake, and Make or another supported generator.
+For native Termux builds: Clang/C++17, CMake, Ninja, and standard build tools.
 
 ```sh
 pkg update
-pkg install clang cmake make
+pkg install clang cmake ninja
 ```
+
+For other platforms, use a CMake version that satisfies the project's minimum version (3.23) and a supported C++17 compiler.
 
 ## Build and test
 
+A direct CMake build:
+
 ```sh
-cmake -S . -B build -DSTORM_BUILD_DEMO=ON -DSTORM_BUILD_TESTS=ON
+cmake -S . -B build -G Ninja -DSTORM_BUILD_DEMO=ON -DSTORM_BUILD_TESTS=ON
 cmake --build build --parallel
-ctest --test-dir build --output-on-failure
+ctest --test-dir build --output-on-failure --no-tests=error
 ```
 
 With CMake presets:
@@ -45,14 +50,25 @@ cmake --build --preset debug
 ctest --preset debug
 ```
 
+Release:
+
+```sh
+cmake --preset release
+cmake --build --preset release
+ctest --preset release
+```
+
+The test executables keep assertions enabled even when the engine itself is built as Release, so Release CI does not silently skip assertion-based checks.
+
 ## Development rules
 
 1. Keep platform-specific code outside the engine core.
 2. Keep rendering backends behind interfaces.
 3. Add tests when core behavior changes.
 4. Prefer small, reviewable commits.
-5. Never claim an Android or Termux build passed unless it was actually run.
+5. Never claim an Android, Termux, or CI build passed unless its result was actually observed.
 6. Verify platform APIs against current official documentation before implementation.
+7. Treat a missing CI result as unknown, not as success.
 
 ## Architecture
 
