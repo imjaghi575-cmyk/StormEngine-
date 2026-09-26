@@ -54,6 +54,10 @@
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "android-arm64",
+      "configurePreset": "android-arm64"
     }
   ],
   "testPresets": [
