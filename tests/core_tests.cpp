@@ -58,6 +58,9 @@ int main() {
     engine.tick(-1.0);
     assert(std::abs(engine_child_ptr->position().x - 0.1f) < 0.0001f);
 
+    engine.tick(std::numeric_limits<double>::quiet_NaN());
+    assert(std::isfinite(engine_child_ptr->position().x));
+
     storm::Engine invalid_engine({
         "Invalid Config",
         -1.0
