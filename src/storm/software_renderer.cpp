@@ -109,8 +109,10 @@ void SoftwareRenderer::draw_sprite(const Rect& destination,
 
     const int left = std::max(0, static_cast<int>(std::floor(x0)));
     const int top = std::max(0, static_cast<int>(std::floor(y0)));
-    const int right = std::min(width_, static_cast<int>(std::ceil(x1)));
-    const int bottom = std::min(height_, static_cast<int>(std::ceil(y1)));
+    const int right = std::min(width_, static_cast<int>(
+        std::min(x1, static_cast<double>(width_))));
+    const int bottom = std::min(height_, static_cast<int>(
+        std::min(y1, static_cast<double>(height_))));
 
     const auto& source = texture.pixels();
     const int source_width = texture.width();
