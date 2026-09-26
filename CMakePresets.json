@@ -9,7 +9,7 @@
     {
       "name": "debug",
       "displayName": "Storm Debug",
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -20,12 +20,12 @@
     {
       "name": "release",
       "displayName": "Storm Release",
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "STORM_BUILD_DEMO": "OFF",
-        "STORM_BUILD_TESTS": "ON"
+        "STORM_BUILD_TESTS": "ON
       }
     }
   ],
