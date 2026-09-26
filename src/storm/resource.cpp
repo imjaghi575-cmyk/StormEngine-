@@ -1,5 +1,7 @@
 #include "storm/resource.hpp"
 
+#include <fstream>
+#include <iterator>
 #include <utility>
 
 namespace storm {
@@ -48,7 +50,7 @@ void MemoryResourceProvider::clear() noexcept {
 }
 
 std::shared_ptr<const Resource> MemoryResourceProvider::load(
-    const std::string& path) {
+    const std::string& path) const {
     if (path.empty()) return nullptr;
 
     for (const auto& entry : resources_) {
@@ -56,6 +58,39 @@ std::shared_ptr<const Resource> MemoryResourceProvider::load(
     }
 
     return nullptr;
+}
+
+FileResourceProvider::FileResourceProvider(std::filesystem::path root)
+    : root_(std::move(root)) {}
+
+std::shared_ptr<const Resource> FileResourceProvider::load(
+    const std::string& path) const {
+    if (path.empty()) return nullptr;
+
+    const std::filesystem::path relative(path);
+    if (relative.is_absolute()) return nullptr;
+
+    const auto candidate = root_ / relative;
+    std::error_code ec;
+    const auto canonical_root = std::filesystem::weakly_canonical(root_, ec);
+    if (ec) return nullptr;
+    const auto canonical_candidate = std::filesystem::weakly_canonical(candidate, ec);
+    if (ec) return nullptr;
+
+    auto root_it = canonical_root.begin();
+    auto candidate_it = canonical_candidate.begin();
+    for (; root_it != canonical_root.end(); ++root_it, ++candidate_it) {
+        if (candidate_it == canonical_candidate.end() || *root_it != *candidate_it) {
+            return nullptr;
+        }
+    }
+
+    std::ifstream file(canonical_candidate, std::ios::binary);
+    if (!file) return nullptr;
+
+    std::vector<std::uint8_t> bytes(
+        std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+    return std::make_shared<const Resource>(std::move(bytes));
 }
 
 } // namespace storm
