@@ -30,7 +30,10 @@ add_library(storm_core
     src/storm/resource.cpp
 )
 
-target_include_directories(storm_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(storm_core PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 target_compile_features(storm_core PUBLIC cxx_std_17)
 
