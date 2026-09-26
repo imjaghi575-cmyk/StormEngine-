@@ -1,0 +1,88 @@
+#pragma once
+
+#include <chrono>
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
+
+namespace storm {
+
+struct Vec2 {
+    float x{0.0f};
+    float y{0.0f};
+
+    Vec2() = default;
+    Vec2(float x_value, float y_value) : x(x_value), y(y_value) {}
+
+    Vec2 operator+(const Vec2& other) const {
+        return {x + other.x, y + other.y};
+    }
+
+    Vec2 operator-(const Vec2& other) const {
+        return {x - other.x, y - other.y};
+    }
+
+    Vec2 operator*(float scalar) const {
+        return {x * scalar, y * scalar};
+    }
+};
+
+class Node {
+public:
+    explicit Node(std::string name = "Node");
+    virtual ~Node() = default;
+
+    const std::string& name() const;
+    void set_name(std::string name);
+
+    Vec2 position() const;
+    void set_position(Vec2 position);
+
+    void add_child(std::unique_ptr<Node> child);
+    const std::vector<std::unique_ptr<Node>>& children() const;
+
+    virtual void update(double delta_seconds);
+
+private:
+    std::string name_;
+    Vec2 position_{};
+    std::vector<std::unique_ptr<Node>> children_;
+};
+
+class Scene {
+public:
+    Scene();
+
+    Node& root();
+    const Node& root() const;
+
+    void update(double delta_seconds);
+
+private:
+    Node root_;
+};
+
+class Engine {
+public:
+    struct Config {
+        std::string name{"Storm Engine"};
+        double max_delta_seconds{0.1};
+    };
+
+    explicit Engine(Config config = {});
+
+    void set_scene(std::unique_ptr<Scene> scene);
+    Scene* scene();
+
+    void tick(double delta_seconds);
+    void run_for(double seconds, double fixed_step = 1.0 / 60.0);
+
+    const Config& config() const;
+
+private:
+    Config config_;
+    std::unique_ptr<Scene> scene_;
+};
+
+} // namespace storm
