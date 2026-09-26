@@ -85,6 +85,19 @@ int main() {
     invalid_engine.tick(1.0);
     assert(std::abs(invalid_child_ptr->position().x) < 0.0001f);
 
+    storm::Engine nonfinite_engine({
+        "Nonfinite Config",
+        std::numeric_limits<double>::infinity()
+    });
+    auto nonfinite_scene = std::make_unique<storm::Scene>();
+    auto nonfinite_child = std::make_unique<TestNode>();
+    auto* nonfinite_child_ptr = nonfinite_child.get();
+    nonfinite_scene->root().add_child(std::move(nonfinite_child));
+    nonfinite_engine.set_scene(std::move(nonfinite_scene));
+
+    nonfinite_engine.tick(1.0);
+    assert(std::abs(nonfinite_child_ptr->position().x) < 0.0001f);
+
     engine.set_scene(nullptr);
     assert(engine.scene() == nullptr);
 
