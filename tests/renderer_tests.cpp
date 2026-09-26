@@ -57,6 +57,8 @@ int main() {
     assert(software->framebuffer()[20U * 640U + 28U].g == 255);
     assert(software->framebuffer()[28U * 640U + 20U].b == 255);
     assert(software->framebuffer()[20U * 640U + 28U].a == 255);
+    assert(software->framebuffer()[10U * 640U + 10U].r == 255);
+    assert(software->framebuffer()[10U * 640U + 10U].g == 255);
 
     renderer->begin_frame({10, 20, 30, 255});
     const storm::Texture2D transparent_texture(1, 1, {
@@ -96,10 +98,8 @@ int main() {
     assert(software->framebuffer()[2].b >= 14 &&
            software->framebuffer()[2].b <= 15);
     assert(software->framebuffer()[2].a == 255);
-    assert(software->framebuffer()[10U * 640U + 10U].r == 255);
     assert(software->framebuffer()[0].r == 10);
     assert(software->framebuffer()[0].g == 20);
-    assert(software->framebuffer()[10U * 640U + 10U].g == 255);
     renderer->draw_sprite({20, 20, 16, 16}, storm::Texture2D{});
     renderer->end_frame();
 
