@@ -67,7 +67,22 @@ Scene* Engine::scene() noexcept {
 
 void Engine::tick(double delta_seconds) {
     if (!scene_) return;
+    process_input();
     scene_->update(clock_.tick(delta_seconds));
+}
+
+void Engine::process_input() {
+    while (!input_queue_.empty()) {
+        input_state_.apply(input_queue_.pop());
+    }
+}
+
+InputState& Engine::input() noexcept {
+    return input_state_;
+}
+
+const InputState& Engine::input() const noexcept {
+    return input_state_;
 }
 
 void Engine::run_for(double seconds, double fixed_step) {
