@@ -35,5 +35,41 @@ int main() {
     queue.clear();
     assert(queue.empty());
 
+    state.apply({
+        storm::InputEventType::PointerMoved,
+        storm::KeyCode::Unknown,
+        storm::PointerButton::None,
+        12.5f,
+        24.0f
+    });
+    assert(state.pointer_x() == 12.5f);
+    assert(state.pointer_y() == 24.0f);
+    assert(!state.is_down(storm::PointerButton::Primary));
+
+    state.apply({
+        storm::InputEventType::PointerPressed,
+        storm::KeyCode::Unknown,
+        storm::PointerButton::Primary,
+        12.5f,
+        24.0f
+    });
+    assert(state.is_down(storm::PointerButton::Primary));
+
+    state.apply({
+        storm::InputEventType::PointerReleased,
+        storm::KeyCode::Unknown,
+        storm::PointerButton::Primary,
+        13.0f,
+        25.0f
+    });
+    assert(!state.is_down(storm::PointerButton::Primary));
+    assert(state.pointer_x() == 13.0f);
+    assert(state.pointer_y() == 25.0f);
+
+    state.clear();
+    assert(!state.is_down(storm::PointerButton::Primary));
+    assert(state.pointer_x() == 0.0f);
+    assert(state.pointer_y() == 0.0f);
+
     return 0;
 }
