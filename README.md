@@ -16,7 +16,7 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Renderer2D abstraction
 - Software renderer test backend with deterministic in-memory framebuffer
 - Seven CTest core/platform/renderer/time/input/fixed-timestep/resource test targets
-- Resource abstraction with deterministic in-memory provider
+- Resource abstraction with deterministic memory and bounded file providers
 - GCC and Clang Debug/Release CI
 - GCC AddressSanitizer/UndefinedBehaviorSanitizer CI
 - CMake Debug/Release/Android arm64 presets using Ninja
@@ -85,7 +85,9 @@ Storm Engine
 │   ├── Software
 │   ├── OpenGL ES (planned)
 │   └── Vulkan (planned)
-├── Resources (planned)
+├── Resources
+│   ├── Memory
+│   └── Bounded File
 ├── Audio (planned)
 └── Editor (planned)
 ```
