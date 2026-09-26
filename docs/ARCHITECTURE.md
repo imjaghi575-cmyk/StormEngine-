@@ -38,6 +38,10 @@ Unknown keyboard and pointer sentinel values are deliberately not reported as pr
 
 Its framebuffer is stored as a contiguous `Color` array. `begin_frame` clears it, and `draw_rect` performs finite-rectangle validation and viewport clipping. Texture loading is not implemented yet; `draw_sprite` remains a no-op until the resource system exists.
 
+### Resources
+
+The resource layer currently provides a small `Resource` value type and `ResourceProvider` interface. `MemoryResourceProvider` supplies deterministic test data without filesystem or Android dependencies. It is intentionally not a file loader yet; path normalization, asynchronous I/O, caching policy, and platform storage should be defined before adding those responsibilities.
+
 ## Build and test model
 
 The repository uses CMake presets and CTest. CI verifies:
@@ -55,7 +59,7 @@ The Android build uses the NDK CMake toolchain and does not build desktop demos 
 
 The next engine layers should be implemented in this order:
 
-1. Resource/asset abstractions with explicit ownership and error reporting.
+1. Filesystem/Android-backed resource providers with explicit path and error policy.
 2. Texture/image representation that can feed renderer backends.
 3. A real Android platform/application layer using NDK-supported APIs.
 4. OpenGL ES rendering behind `Renderer2D`.
