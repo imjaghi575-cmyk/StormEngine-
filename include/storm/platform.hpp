@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 
@@ -13,22 +15,25 @@ enum class Key : std::uint16_t {
     Left,
     Right,
     Up,
-    Down
+    Down,
+    Count
 };
 
 struct InputState {
     bool quit_requested{false};
 
     bool key_down(Key key) const noexcept {
-        return key == Key::Unknown ? false : keys[static_cast<std::size_t>(key)];
+        const auto index = static_cast<std::size_t>(key);
+        return index < keys.size() && keys[index];
     }
 
     void set_key(Key key, bool down) noexcept {
-        if (key != Key::Unknown) keys[static_cast<std::size_t>(key)] = down;
+        const auto index = static_cast<std::size_t>(key);
+        if (index < keys.size()) keys[index] = down;
     }
 
 private:
-    bool keys[16]{};
+    std::array<bool, static_cast<std::size_t>(Key::Count)> keys{};
 };
 
 class Platform {
