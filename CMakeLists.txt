@@ -23,11 +23,7 @@ add_library(storm_core
     src/storm/headless_platform.cpp
 )
 
-target_include_directories(storm_core
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
+target_include_directories(storm_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_features(storm_core PUBLIC cxx_std_17)
 
 if(STORM_ENABLE_WARNINGS)
@@ -58,4 +54,8 @@ if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_renderer_tests tests/renderer_tests.cpp)
     target_link_libraries(storm_renderer_tests PRIVATE storm_core)
     add_test(NAME storm_renderer_tests COMMAND storm_renderer_tests)
+
+    add_executable(storm_time_tests tests/time_tests.cpp)
+    target_link_libraries(storm_time_tests PRIVATE storm_core)
+    add_test(NAME storm_time_tests COMMAND storm_time_tests)
 endif()
