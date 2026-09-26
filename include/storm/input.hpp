@@ -71,7 +71,7 @@ public:
     void push(InputEvent event);
     bool empty() const noexcept;
     std::size_t size() const noexcept;
-    InputEvent pop();
+    bool try_pop(InputEvent& event) noexcept;
     void clear() noexcept;
 
 private:
