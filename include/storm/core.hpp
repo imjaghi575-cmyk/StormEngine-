@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <cmath>
 #include <memory>
 #include <string>
@@ -12,14 +11,24 @@ struct Vec2 {
     float x{0.0f};
     float y{0.0f};
 
-    Vec2() = default;
-    Vec2(float x_value, float y_value) : x(x_value), y(y_value) {}
+    constexpr Vec2() = default;
+    constexpr Vec2(float x_value, float y_value) : x(x_value), y(y_value) {}
 
-    Vec2 operator+(const Vec2& other) const { return {x + other.x, y + other.y}; }
-    Vec2 operator-(const Vec2& other) const { return {x - other.x, y - other.y}; }
-    Vec2 operator*(float scalar) const { return {x * scalar, y * scalar}; }
+    constexpr Vec2 operator+(const Vec2& other) const {
+        return {x + other.x, y + other.y};
+    }
 
-    float length() const { return std::sqrt(x * x + y * y); }
+    constexpr Vec2 operator-(const Vec2& other) const {
+        return {x - other.x, y - other.y};
+    }
+
+    constexpr Vec2 operator*(float scalar) const {
+        return {x * scalar, y * scalar};
+    }
+
+    float length() const noexcept {
+        return std::sqrt(x * x + y * y);
+    }
 };
 
 struct Transform2D {
@@ -42,9 +51,9 @@ public:
     Vec2 position() const;
     void set_position(Vec2 position);
 
-    Node* parent() const;
+    Node* parent() const noexcept;
     void add_child(std::unique_ptr<Node> child);
-    const std::vector<std::unique_ptr<Node>>& children() const;
+    const std::vector<std::unique_ptr<Node>>& children() const noexcept;
 
     virtual void update(double delta_seconds);
 
@@ -61,8 +70,8 @@ class Scene {
 public:
     Scene();
 
-    Node& root();
-    const Node& root() const;
+    Node& root() noexcept;
+    const Node& root() const noexcept;
 
     void update(double delta_seconds);
 
@@ -80,12 +89,12 @@ public:
     explicit Engine(Config config = {});
 
     void set_scene(std::unique_ptr<Scene> scene);
-    Scene* scene();
+    Scene* scene() noexcept;
 
     void tick(double delta_seconds);
     void run_for(double seconds, double fixed_step = 1.0 / 60.0);
 
-    const Config& config() const;
+    const Config& config() const noexcept;
 
 private:
     Config config_;
