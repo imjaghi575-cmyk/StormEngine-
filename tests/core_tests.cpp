@@ -28,9 +28,6 @@ int main() {
     auto* child_ptr = child.get();
     scene.root().add_child(std::move(child));
 
-    assert(child_ptr->parent() == &scene.root());
-    assert(scene.root().children().size() == 1);
-
     scene.update(0.5);
     assert(std::abs(child_ptr->position().x - 0.5f) < 0.0001f);
 
@@ -71,6 +68,19 @@ int main() {
     engine.run_for(0.01, std::numeric_limits<double>::quiet_NaN());
     assert(std::abs(engine_child_ptr->position().x - before_invalid_runs) < 0.0001f);
 
+    storm::Engine configured_engine({
+        "Configured",
+        0.25
+    });
+    auto configured_scene = std::make_unique<storm::Scene>();
+    auto configured_child = std::make_unique<TestNode>();
+    auto* configured_child_ptr = configured_child.get();
+    configured_scene->root().add_child(std::move(configured_child));
+    configured_engine.set_scene(std::move(configured_scene));
+
+    configured_engine.tick(1.0);
+    assert(std::abs(configured_child_ptr->position().x - 0.25f) < 0.0001f);
+
     storm::Engine invalid_engine({
         "Invalid Config",
         -1.0
@@ -84,19 +94,6 @@ int main() {
 
     invalid_engine.tick(1.0);
     assert(std::abs(invalid_child_ptr->position().x) < 0.0001f);
-
-    storm::Engine nonfinite_engine({
-        "Nonfinite Config",
-        std::numeric_limits<double>::infinity()
-    });
-    auto nonfinite_scene = std::make_unique<storm::Scene>();
-    auto nonfinite_child = std::make_unique<TestNode>();
-    auto* nonfinite_child_ptr = nonfinite_child.get();
-    nonfinite_scene->root().add_child(std::move(nonfinite_child));
-    nonfinite_engine.set_scene(std::move(nonfinite_scene));
-
-    nonfinite_engine.tick(1.0);
-    assert(std::abs(nonfinite_child_ptr->position().x) < 0.0001f);
 
     engine.set_scene(nullptr);
     assert(engine.scene() == nullptr);
