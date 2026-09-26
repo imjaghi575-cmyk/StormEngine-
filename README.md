@@ -63,6 +63,8 @@ ctest --preset release
 
 The test executables keep assertions enabled even when the engine itself is built as Release, so Release CI does not silently skip assertion-based checks.
 
+Optional installation exports a relocatable `StormEngine::storm_core` CMake package. CI also builds a small external consumer against the installed package.
+
 ## Development rules
 
 1. Keep platform-specific code outside the engine core.
