@@ -1,67 +1,12 @@
 #pragma once
 
-#include <array>
-#include <cstddef>
-#include <cstdint>
+#include "storm/input.hpp"
+
 #include <memory>
 
 namespace storm {
 
-enum class Key : std::uint16_t {
-    Unknown = 0,
-    Escape,
-    Enter,
-    Space,
-    Left,
-    Right,
-    Up,
-    Down,
-    Count
-};
-
-enum class InputEventType : std::uint8_t {
-    Quit,
-    KeyDown,
-    KeyUp
-};
-
-struct InputEvent {
-    InputEventType type{InputEventType::Quit};
-    Key key{Key::Unknown};
-};
-
-struct InputState {
-    bool quit_requested{false};
-
-    bool key_down(Key key) const noexcept {
-        if (key == Key::Unknown || key == Key::Count) return false;
-        const auto index = static_cast<std::size_t>(key);
-        return index < keys.size() && keys[index];
-    }
-
-    void set_key(Key key, bool down) noexcept {
-        if (key == Key::Unknown || key == Key::Count) return;
-        const auto index = static_cast<std::size_t>(key);
-        if (index < keys.size()) keys[index] = down;
-    }
-
-    void apply_event(const InputEvent& event) noexcept {
-        switch (event.type) {
-        case InputEventType::Quit:
-            quit_requested = true;
-            break;
-        case InputEventType::KeyDown:
-            set_key(event.key, true);
-            break;
-        case InputEventType::KeyUp:
-            set_key(event.key, false);
-            break;
-        }
-    }
-
-private:
-    std::array<bool, static_cast<std::size_t>(Key::Count)> keys{};
-};
+using PlatformInputState = InputState;
 
 class Platform {
 public:
