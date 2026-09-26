@@ -17,8 +17,32 @@ int main() {
 
     assert(!input.key_down(storm::Key::Space));
 
-    input.set_key(storm::Key::Space, true);
+    input.apply_event({
+        storm::InputEventType::KeyDown,
+        storm::Key::Space
+    });
     assert(input.key_down(storm::Key::Space));
+
+    input.apply_event({
+        storm::InputEventType::KeyUp,
+        storm::Key::Space
+    });
+    assert(!input.key_down(storm::Key::Space));
+
+    input.apply_event({
+        storm::InputEventType::KeyDown,
+        storm::Key::Escape
+    });
+    assert(input.key_down(storm::Key::Escape));
+
+    input.apply_event({
+        storm::InputEventType::Quit,
+        storm::Key::Unknown
+    });
+    assert(input.quit_requested);
+
+    input.set_key(storm::Key::Unknown, true);
+    assert(input.key_down(storm::Key::Unknown));
 
     assert(platform->poll_events(input));
     platform->shutdown();
