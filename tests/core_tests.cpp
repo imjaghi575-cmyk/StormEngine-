@@ -6,6 +6,30 @@
 #include <limits>
 #include <memory>
 
+class SpawningNode final : public storm::Node {
+public:
+    SpawningNode()
+        : storm::Node("Spawner") {}
+
+    void update(double delta_seconds) override {
+        if (!spawned_) {
+            auto child = std::make_unique<TestNode>();
+            spawned_child_ = child.get();
+            add_child(std::move(child));
+            spawned_ = true;
+        }
+        storm::Node::update(delta_seconds);
+    }
+
+    storm::Node* spawned_child() const noexcept {
+        return spawned_child_;
+    }
+
+private:
+    bool spawned_{false};
+    storm::Node* spawned_child_{nullptr};
+};
+
 class TestNode final : public storm::Node {
 public:
     TestNode() : storm::Node("Test") {}
@@ -38,6 +62,16 @@ int main() {
     assert(child_ptr->transform().scale.x == 2.0f);
     assert(child_ptr->transform().scale.y == 3.0f);
     assert(child_ptr->transform().rotation == 1.0f);
+
+    storm::Scene mutation_scene;
+    auto spawning = std::make_unique<SpawningNode>();
+    auto* spawning_ptr = spawning.get();
+    mutation_scene.root().add_child(std::move(spawning));
+    mutation_scene.update(0.5);
+    assert(spawning_ptr->spawned_child() != nullptr);
+    assert(spawning_ptr->spawned_child()->position().x == 0.0f);
+    mutation_scene.update(0.5);
+    assert(spawning_ptr->spawned_child()->position().x > 0.0f);
 
     storm::Engine engine;
     assert(engine.scene() == nullptr);
