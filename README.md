@@ -15,10 +15,10 @@ Storm is an independent project. It is not a fork or clone of Godot.
 - Deterministic fixed-timestep update support
 - Renderer2D abstraction
 - Software renderer smoke-test backend
-- Five CTest core/platform/renderer/time/input test targets
+- Six CTest core/platform/renderer/time/input/fixed-timestep test targets
 - GCC and Clang Debug/Release CI
 - GCC AddressSanitizer/UndefinedBehaviorSanitizer CI
-- CMake Debug/Release presets using Ninja
+- CMake Debug/Release/Android arm64 presets using Ninja
 
 The software renderer is intentionally a test backend. It does not create a graphical window.
 
