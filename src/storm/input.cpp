@@ -1,5 +1,7 @@
 #include "storm/input.hpp"
 
+#include <cmath>
+
 namespace storm {
 
 void InputState::apply(const InputEvent& event) noexcept {
@@ -16,8 +18,10 @@ void InputState::apply(const InputEvent& event) noexcept {
         break;
     }
     case InputEventType::PointerMoved:
-        pointer_x_ = event.x;
-        pointer_y_ = event.y;
+        if (std::isfinite(event.x) && std::isfinite(event.y)) {
+            pointer_x_ = event.x;
+            pointer_y_ = event.y;
+        }
         break;
     case InputEventType::PointerPressed:
     case InputEventType::PointerReleased: {
@@ -26,8 +30,10 @@ void InputState::apply(const InputEvent& event) noexcept {
             pointer_buttons_[index] =
                 event.type == InputEventType::PointerPressed;
         }
-        pointer_x_ = event.x;
-        pointer_y_ = event.y;
+        if (std::isfinite(event.x) && std::isfinite(event.y)) {
+            pointer_x_ = event.x;
+            pointer_y_ = event.y;
+        }
         break;
     }
     }
