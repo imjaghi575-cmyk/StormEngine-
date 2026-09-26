@@ -19,6 +19,17 @@ enum class Key : std::uint16_t {
     Count
 };
 
+enum class InputEventType : std::uint8_t {
+    Quit,
+    KeyDown,
+    KeyUp
+};
+
+struct InputEvent {
+    InputEventType type{InputEventType::Quit};
+    Key key{Key::Unknown};
+};
+
 struct InputState {
     bool quit_requested{false};
 
@@ -30,6 +41,20 @@ struct InputState {
     void set_key(Key key, bool down) noexcept {
         const auto index = static_cast<std::size_t>(key);
         if (index < keys.size()) keys[index] = down;
+    }
+
+    void apply_event(const InputEvent& event) noexcept {
+        switch (event.type) {
+        case InputEventType::Quit:
+            quit_requested = true;
+            break;
+        case InputEventType::KeyDown:
+            set_key(event.key, true);
+            break;
+        case InputEventType::KeyUp:
+            set_key(event.key, false);
+            break;
+        }
     }
 
 private:
