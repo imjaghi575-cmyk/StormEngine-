@@ -54,7 +54,7 @@ int main() {
     assert(software->framebuffer().front().g == 20);
     assert(software->framebuffer()[10U * 640U + 10U].g == 255);
     assert(software->framebuffer()[20U * 640U + 20U].b == 255);
-    renderer->draw_sprite({20, 20, 16, 16}, "");
+    renderer->draw_sprite({20, 20, 16, 16}, storm::Texture2D{});
     renderer->end_frame();
 
     renderer->shutdown();
