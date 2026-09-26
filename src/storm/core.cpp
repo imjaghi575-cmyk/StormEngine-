@@ -70,8 +70,8 @@ void Engine::queue_input(InputEvent event) {
 }
 
 void Engine::tick(double delta_seconds) {
-    if (!scene_) return;
     process_input();
+    if (!scene_) return;
     scene_->update(clock_.tick(delta_seconds));
 }
 
