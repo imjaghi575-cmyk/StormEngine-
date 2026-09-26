@@ -14,8 +14,6 @@ int main() {
 
     renderer->begin_frame({0, 0, 0, 255});
     renderer->draw_rect({10, 10, 32, 32}, {255, 255, 255, 255});
-    const auto clear = software->framebuffer().front();
-    assert(clear.r == 0 && clear.g == 0 && clear.b == 0 && clear.a == 255);
     renderer->draw_sprite({20, 20, 16, 16}, "");
     renderer->end_frame();
 
@@ -27,13 +25,19 @@ int main() {
     assert(software != nullptr);
     assert(software->framebuffer().size() == 640U * 480U);
 
+    const auto clear = software->framebuffer().front();
+    assert(clear.r == 255 && clear.g == 255 && clear.b == 255 && clear.a == 255);
+
     renderer->begin_frame({0, 0, 0, 255});
     renderer->draw_rect({10, 10, 32, 32}, {255, 255, 255, 255});
+    renderer->draw_rect({-5, -5, 10, 10}, {10, 20, 30, 255});
     renderer->draw_rect({
         std::numeric_limits<float>::quiet_NaN(), 10, 32, 32
     }, {255, 255, 255, 255});
     renderer->draw_sprite({20, 20, 16, 16}, "test.png");
     assert(software->framebuffer()[10U * 640U + 10U].r == 255);
+    assert(software->framebuffer().front().r == 10);
+    assert(software->framebuffer().front().g == 20);
     assert(software->framebuffer()[10U * 640U + 10U].g == 255);
     assert(software->framebuffer()[20U * 640U + 20U].b == 255);
     renderer->draw_sprite({20, 20, 16, 16}, "");
