@@ -88,8 +88,8 @@ std::shared_ptr<const Resource> FileResourceProvider::load(
     std::ifstream file(canonical_candidate, std::ios::binary);
     if (!file) return nullptr;
 
-    std::vector<std::uint8_t> bytes(
-        std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+    std::vector<std::uint8_t> bytes{
+        std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
     return std::make_shared<const Resource>(std::move(bytes));
 }
 
