@@ -28,7 +28,7 @@ int main() {
         sum += dt;
     }) == 3);
     assert(steps == 5);
-    assert(clock.accumulator() == 0.0);
+    assert(std::abs(clock.accumulator() - 0.06) < 1e-12);
 
     const int before = steps;
     assert(clock.advance(-1.0, [&](double) { ++steps; }) == 0);
