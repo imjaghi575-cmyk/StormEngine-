@@ -45,17 +45,35 @@ endif()
 if(BUILD_TESTING AND STORM_BUILD_TESTS)
     add_executable(storm_core_tests tests/core_tests.cpp)
     target_link_libraries(storm_core_tests PRIVATE storm_core)
-    add_test(NAME storm_core_tests COMMAND storm_core_tests)
 
     add_executable(storm_platform_tests tests/platform_tests.cpp)
     target_link_libraries(storm_platform_tests PRIVATE storm_core)
-    add_test(NAME storm_platform_tests COMMAND storm_platform_tests)
 
     add_executable(storm_renderer_tests tests/renderer_tests.cpp)
     target_link_libraries(storm_renderer_tests PRIVATE storm_core)
-    add_test(NAME storm_renderer_tests COMMAND storm_renderer_tests)
 
     add_executable(storm_time_tests tests/time_tests.cpp)
     target_link_libraries(storm_time_tests PRIVATE storm_core)
+
+    set(STORM_TEST_TARGETS
+        storm_core_tests
+        storm_platform_tests
+        storm_renderer_tests
+        storm_time_tests
+    )
+
+    if(MSVC)
+        foreach(test_target IN LISTS STORM_TEST_TARGETS)
+            target_compile_options(${test_target} PRIVATE /UNDEBUG)
+        endforeach()
+    else()
+        foreach(test_target IN LISTS STORM_TEST_TARGETS)
+            target_compile_options(${test_target} PRIVATE -UNDEBUG)
+        endforeach()
+    endif()
+
+    add_test(NAME storm_core_tests COMMAND storm_core_tests)
+    add_test(NAME storm_platform_tests COMMAND storm_platform_tests)
+    add_test(NAME storm_renderer_tests COMMAND storm_renderer_tests)
     add_test(NAME storm_time_tests COMMAND storm_time_tests)
 endif()
