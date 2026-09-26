@@ -119,9 +119,11 @@ void SoftwareRenderer::draw_rect(const Rect& rect, Color color) {
 
     for (int y = top; y < bottom; ++y) {
         for (int x = left; x < right; ++x) {
-            pixels_[static_cast<std::size_t>(y) *
-                        static_cast<std::size_t>(width_) +
-                    static_cast<std::size_t>(x)] = color;
+            auto& destination =
+                pixels_[static_cast<std::size_t>(y) *
+                            static_cast<std::size_t>(width_) +
+                        static_cast<std::size_t>(x)];
+            destination = blend_source_over(color, destination);
         }
     }
 }
