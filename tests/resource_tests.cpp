@@ -14,6 +14,10 @@ int main() {
     assert(provider.load("missing") == nullptr);
 
     provider.put("textures/test.bin", {1, 2, 3, 4});
+    provider.put("textures/./test.bin", {5, 6});
+    auto normalized = provider.load("textures/test.bin");
+    assert(normalized != nullptr);
+    assert(normalized->data()[0] == 5);
     auto first = provider.load("textures/test.bin");
     assert(first != nullptr);
     assert(first->size() == 4);
@@ -29,6 +33,10 @@ int main() {
 
     provider.put("", {7});
     assert(provider.load("") == nullptr);
+    assert(provider.load("../escape") == nullptr);
+    assert(provider.load("/absolute") == nullptr);
+    provider.put("../escape", {7});
+    assert(provider.load("../escape") == nullptr);
 
     provider.remove("textures/test.bin");
     assert(provider.load("textures/test.bin") == nullptr);
