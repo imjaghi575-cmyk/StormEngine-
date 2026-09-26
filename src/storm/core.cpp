@@ -1,6 +1,7 @@
 #include "storm/core.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <thread>
 #include <utility>
 
@@ -91,12 +92,18 @@ void Engine::run_for(double seconds, double fixed_step) {
 
         tick(frame_delta);
 
-        const auto sleep_time = std::chrono::duration<double>(fixed_step);
-        const auto after_tick = std::chrono::steady_clock::now();
-        const auto spent = after_tick - now;
+        const auto deadline =
+            start + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+                         std::chrono::duration<double>(seconds));
 
-        if (spent < sleep_time) {
-            std::this_thread::sleep_for(sleep_time - spent);
+        const auto next_wakeup =
+            std::min(now + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+                             std::chrono::duration<double>(fixed_step)),
+                     deadline);
+
+        const auto current = std::chrono::steady_clock::now();
+        if (current < next_wakeup) {
+            std::this_thread::sleep_until(next_wakeup);
         }
     }
 }
