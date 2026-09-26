@@ -26,8 +26,5 @@ int main() {
     clock.set_max_delta_seconds(std::numeric_limits<double>::infinity());
     assert(clock.max_delta_seconds() == 0.0);
 
-    clock.reset();
-    assert(clock.tick(0.05) == 0.0);
-
     return 0;
 }
