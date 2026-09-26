@@ -36,6 +36,12 @@ int main() {
                          [&](double) { ++steps; }) == 0);
     assert(steps == before);
 
+    const int before_overflow = steps;
+    assert(clock.advance(std::numeric_limits<double>::max(),
+                         [&](double) { ++steps; }) == 0);
+    assert(steps == before_overflow);
+    assert(std::isfinite(clock.accumulator()));
+
     clock.set_step(0.0);
     assert(clock.step() == 0.1);
     clock.set_max_steps_per_tick(0);
