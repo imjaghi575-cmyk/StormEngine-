@@ -98,6 +98,8 @@ public:
 
     void tick(double delta_seconds);
     int fixed_update(double elapsed_seconds);
+    void set_fixed_step(double step_seconds) noexcept;
+    double fixed_step() const noexcept;
     void queue_input(InputEvent event);
     void process_input();
     InputState& input() noexcept;
