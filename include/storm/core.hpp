@@ -1,5 +1,6 @@
 #pragma once
 
+#include "storm/fixed_timestep.hpp"
 #include "storm/input.hpp"
 #include "storm/time.hpp"
 
@@ -96,6 +97,7 @@ public:
     Scene* scene() noexcept;
 
     void tick(double delta_seconds);
+    int fixed_update(double elapsed_seconds);
     void queue_input(InputEvent event);
     void process_input();
     InputState& input() noexcept;
@@ -107,6 +109,7 @@ public:
 private:
     Config config_;
     FrameClock clock_;
+    FixedTimestep fixed_timestep_;
     InputQueue input_queue_;
     InputState input_state_;
     std::unique_ptr<Scene> scene_;
