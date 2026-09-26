@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(STORM_BUILD_DEMO "Build the Storm Engine demos" ON)
 option(STORM_BUILD_TESTS "Build Storm Engine tests" ${BUILD_TESTING})
+option(STORM_ENABLE_WARNINGS "Enable compiler warnings for Storm targets" ON)
 
 add_library(storm_core
     src/storm/core.cpp
@@ -27,6 +28,14 @@ target_include_directories(storm_core
 )
 
 target_compile_features(storm_core PUBLIC cxx_std_17)
+
+if(STORM_ENABLE_WARNINGS)
+    if(MSVC)
+        target_compile_options(storm_core PRIVATE /W4)
+    else()
+        target_compile_options(storm_core PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endif()
 
 if(STORM_BUILD_DEMO)
     add_executable(storm_demo examples/hello_world.cpp)
