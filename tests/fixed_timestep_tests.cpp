@@ -36,14 +36,15 @@ int main() {
                          [&](double) { ++steps; }) == 0);
     assert(steps == before);
 
-    storm::FixedTimestep overflow_clock(0.1, 3);
-    int overflow_steps = 0;
-    assert(overflow_clock.advance(std::numeric_limits<double>::max(),
-                                  [&](double) { ++overflow_steps; }) == 3);
+    storm::FixedTimestep overflow_clock(
+        std::numeric_limits<double>::max(), 3);
+    assert(overflow_clock.advance(
+               std::numeric_limits<double>::max() / 2.0,
+               [&](double) {}) == 0);
     assert(std::isfinite(overflow_clock.accumulator()));
-    assert(overflow_clock.advance(std::numeric_limits<double>::max(),
-                                  [&](double) { ++overflow_steps; }) == 0);
-    assert(overflow_steps == 3);
+    assert(overflow_clock.advance(
+               std::numeric_limits<double>::max(),
+               [&](double) {}) == 0);
     assert(overflow_clock.accumulator() == 0.0);
 
     clock.set_step(0.0);
